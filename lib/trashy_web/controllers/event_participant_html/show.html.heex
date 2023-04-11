@@ -1,0 +1,16 @@
+<.header>
+  Event participant <%= @event_participant.id %>
+  <:subtitle>This is a event_participant record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/event_participants/#{@event_participant}/edit"}>
+      <.button>Edit event_participant</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @event_participant.name %></:item>
+  <:item title="Email"><%= @event_participant.email %></:item>
+</.list>
+
+<.back navigate={~p"/event_participants"}>Back to event_participants</.back>

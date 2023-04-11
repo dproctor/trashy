@@ -1,0 +1,15 @@
+<.header>
+  Cleanup <%= @cleanup.id %>
+  <:subtitle>This is a cleanup record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/cleanups/#{@cleanup}/edit"}>
+      <.button>Edit cleanup</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Location"><%= @cleanup.location %></:item>
+</.list>
+
+<.back navigate={~p"/cleanups"}>Back to cleanups</.back>

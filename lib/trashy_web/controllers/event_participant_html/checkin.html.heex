@@ -1,0 +1,13 @@
+<.simple_form
+  for={@form}
+  id="record_attendance_form"
+  action={~p"/event_participants/checkin/#{@event.id}/record_attendance"}
+  method="put">
+  <.input field={@form[:email]} type="email" placeholder="Email" required />
+  <.input field={@form[:name]} type="name" placeholder="Name" required />
+  <:actions>
+    <.button phx-disable-with="Sending..." class="w-full">
+      Record attendance
+    </.button>
+  </:actions>
+</.simple_form>

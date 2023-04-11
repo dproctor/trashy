@@ -1,0 +1,8 @@
+<.header>
+  Edit Event participant <%= @event_participant.id %>
+  <:subtitle>Use this form to manage event_participant records in your database.</:subtitle>
+</.header>
+
+<.event_participant_form changeset={@changeset} action={~p"/event_participants/#{@event_participant}"} />
+
+<.back navigate={~p"/event_participants"}>Back to event_participants</.back>

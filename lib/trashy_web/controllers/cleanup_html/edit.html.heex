@@ -1,0 +1,8 @@
+<.header>
+  Edit Cleanup <%= @cleanup.id %>
+  <:subtitle>Use this form to manage cleanup records in your database.</:subtitle>
+</.header>
+
+<.cleanup_form changeset={@changeset} action={~p"/cleanups/#{@cleanup}"} />
+
+<.back navigate={~p"/cleanups"}>Back to cleanups</.back>

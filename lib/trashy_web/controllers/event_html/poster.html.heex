@@ -1,0 +1,4 @@
+<h1 class="text-lg">Welcome to the trash pickup </h1>
+<h2 class="text-md"><%= @event.time %></h2>
+<img src={~p"/events/qr_code/#{@event_checkin_url}"} alt="">
+<a href={"#{elem(Base.decode64(@event_checkin_url), 1)}"}>Link</a>

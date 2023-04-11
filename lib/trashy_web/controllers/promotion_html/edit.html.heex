@@ -1,0 +1,8 @@
+<.header>
+  Edit Promotion <%= @promotion.id %>
+  <:subtitle>Use this form to manage promotion records in your database.</:subtitle>
+</.header>
+
+<.promotion_form changeset={@changeset} action={~p"/promotions/#{@promotion}"} />
+
+<.back navigate={~p"/promotions"}>Back to promotions</.back>
