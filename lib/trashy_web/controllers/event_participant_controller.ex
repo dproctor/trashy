@@ -65,8 +65,9 @@ defmodule TrashyWeb.EventParticipantController do
     render(conn, :checkin, event: event, form: Phoenix.HTML.FormData.to_form(%{}, as: "user"))
   end
 
-  def record_attendance(conn, %{"event_id" => event_id, "user" => _user}) do
+  def record_attendance(conn, %{"event_id" => event_id, "user" => user}) do
     event = Events.get_event!(event_id)
+    Events.create_event_participant(user)
     render(conn, :post_record_attendance, event: event)
   end
 end
