@@ -19,7 +19,7 @@ defmodule TrashyWeb.PromotionController do
       {:ok, promotion} ->
         conn
         |> put_flash(:info, "Promotion created successfully.")
-        |> redirect(to: ~p"/promotions/#{promotion}")
+        |> redirect(to: ~p"/organizer/promotions/#{promotion}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -44,7 +44,7 @@ defmodule TrashyWeb.PromotionController do
       {:ok, promotion} ->
         conn
         |> put_flash(:info, "Promotion updated successfully.")
-        |> redirect(to: ~p"/promotions/#{promotion}")
+        |> redirect(to: ~p"/organizer/promotions/#{promotion}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, promotion: promotion, changeset: changeset)
@@ -57,6 +57,6 @@ defmodule TrashyWeb.PromotionController do
 
     conn
     |> put_flash(:info, "Promotion deleted successfully.")
-    |> redirect(to: ~p"/promotions")
+    |> redirect(to: ~p"/organizer/promotions")
   end
 end

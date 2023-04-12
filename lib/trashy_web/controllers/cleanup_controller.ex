@@ -19,7 +19,7 @@ defmodule TrashyWeb.CleanupController do
       {:ok, cleanup} ->
         conn
         |> put_flash(:info, "Cleanup created successfully.")
-        |> redirect(to: ~p"/cleanups/#{cleanup}")
+        |> redirect(to: ~p"/organizer/cleanups/#{cleanup}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -44,7 +44,7 @@ defmodule TrashyWeb.CleanupController do
       {:ok, cleanup} ->
         conn
         |> put_flash(:info, "Cleanup updated successfully.")
-        |> redirect(to: ~p"/cleanups/#{cleanup}")
+        |> redirect(to: ~p"/organizer/cleanups/#{cleanup}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, cleanup: cleanup, changeset: changeset)
@@ -57,6 +57,6 @@ defmodule TrashyWeb.CleanupController do
 
     conn
     |> put_flash(:info, "Cleanup deleted successfully.")
-    |> redirect(to: ~p"/cleanups")
+    |> redirect(to: ~p"/organizer/cleanups")
   end
 end

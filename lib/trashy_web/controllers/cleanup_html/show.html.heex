@@ -2,7 +2,7 @@
   Cleanup <%= @cleanup.id %>
   <:subtitle>This is a cleanup record from your database.</:subtitle>
   <:actions>
-    <.link href={~p"/cleanups/#{@cleanup}/edit"}>
+    <.link href={~p"/organizer/cleanups/#{@cleanup}/edit"}>
       <.button>Edit cleanup</.button>
     </.link>
   </:actions>
@@ -12,4 +12,4 @@
   <:item title="Location"><%= @cleanup.location %></:item>
 </.list>
 
-<.back navigate={~p"/cleanups"}>Back to cleanups</.back>
+<.back navigate={~p"/organizer/cleanups"}>Back to cleanups</.back>

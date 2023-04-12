@@ -6,4 +6,8 @@ defmodule TrashyWeb.PageController do
     # so skip the default app layout.
     render(conn, :home, layout: false)
   end
+
+  def organizer(conn, _params) do
+    render(conn, :organizer)
+  end
 end

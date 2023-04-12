@@ -1,22 +1,22 @@
 <.header>
   Listing Events
   <:actions>
-    <.link href={~p"/events/new"}>
+    <.link href={~p"/organizer/events/new"}>
       <.button>New Event</.button>
     </.link>
   </:actions>
 </.header>
 
-<.table id="events" rows={@events} row_click={&JS.navigate(~p"/events/#{&1}")}>
+<.table id="events" rows={@events} row_click={&JS.navigate(~p"/organizer/events/#{&1}")}>
   <:col :let={event} label="Time"><%= event.time %></:col>
   <:action :let={event}>
     <div class="sr-only">
-      <.link navigate={~p"/events/#{event}"}>Show</.link>
+      <.link navigate={~p"/organizer/events/#{event}"}>Show</.link>
     </div>
-    <.link navigate={~p"/events/#{event}/edit"}>Edit</.link>
+    <.link navigate={~p"/organizer/events/#{event}/edit"}>Edit</.link>
   </:action>
   <:action :let={event}>
-    <.link href={~p"/events/#{event}"} method="delete" data-confirm="Are you sure?">
+    <.link href={~p"/organizer/events/#{event}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
   </:action>

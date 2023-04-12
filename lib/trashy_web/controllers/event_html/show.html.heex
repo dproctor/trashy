@@ -2,7 +2,7 @@
   Event <%= @event.id %>
   <:subtitle>This is a event record from your database.</:subtitle>
   <:actions>
-    <.link href={~p"/events/#{@event}/edit"}>
+    <.link href={~p"/organizer/events/#{@event}/edit"}>
       <.button>Edit event</.button>
     </.link>
   </:actions>
@@ -12,6 +12,6 @@
   <:item title="Time"><%= @event.time %></:item>
 </.list>
 
-<img src={~p"/events/qr_code/#{@event}"} alt="">
+<img src={~p"/organizer/events/qr_code/#{@event}"} alt="">
 
-<.back navigate={~p"/events"}>Back to events</.back>
+<.back navigate={~p"/organizer/events"}>Back to events</.back>

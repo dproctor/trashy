@@ -19,7 +19,7 @@ defmodule TrashyWeb.EventParticipantController do
       {:ok, event_participant} ->
         conn
         |> put_flash(:info, "Event participant created successfully.")
-        |> redirect(to: ~p"/event_participants/#{event_participant}")
+        |> redirect(to: ~p"/organizer/event_participants/#{event_participant}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -44,7 +44,7 @@ defmodule TrashyWeb.EventParticipantController do
       {:ok, event_participant} ->
         conn
         |> put_flash(:info, "Event participant updated successfully.")
-        |> redirect(to: ~p"/event_participants/#{event_participant}")
+        |> redirect(to: ~p"/organizer/event_participants/#{event_participant}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, event_participant: event_participant, changeset: changeset)
@@ -57,7 +57,7 @@ defmodule TrashyWeb.EventParticipantController do
 
     conn
     |> put_flash(:info, "Event participant deleted successfully.")
-    |> redirect(to: ~p"/event_participants")
+    |> redirect(to: ~p"/organizer/event_participants")
   end
 
   def checkin(conn, %{"event_id" => event_id}) do
@@ -65,7 +65,7 @@ defmodule TrashyWeb.EventParticipantController do
     render(conn, :checkin, event: event, form: Phoenix.HTML.FormData.to_form(%{}, as: "user"))
   end
 
-  def record_attendance(conn, %{"event_id" => event_id, "user" => user}) do
+  def record_attendance(conn, %{"event_id" => event_id, "user" => _user}) do
     event = Events.get_event!(event_id)
     render(conn, :post_record_attendance, event: event)
   end

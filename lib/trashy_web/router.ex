@@ -22,20 +22,20 @@ defmodule TrashyWeb.Router do
 
     get "/", PageController, :home
     get "/event_participants/checkin/:event_id", EventParticipantController, :checkin
-  end
-
-  scope "/", TrashyWeb do
-    pipe_through [:browser, :require_authenticated_user, :require_organizer]
-
-    resources "/cleanups", CleanupController
-    resources "/promotions", PromotionController
-    resources "/events", EventController
-    resources "/event_participants", EventParticipantController
-    get "/event_participants/checkin/:event_id", EventParticipantController, :checkin
 
     put "/event_participants/checkin/:event_id/record_attendance",
         EventParticipantController,
         :record_attendance
+  end
+
+  scope "/organizer", TrashyWeb do
+    pipe_through [:browser, :require_authenticated_user, :require_organizer]
+
+    get "/", PageController, :organizer
+    resources "/cleanups", CleanupController
+    resources "/promotions", PromotionController
+    resources "/events", EventController
+    resources "/event_participants", EventParticipantController
 
     get "/events/qr_code/:url", EventController, :qr_code
     get "/events/poster/:event_id", EventController, :poster

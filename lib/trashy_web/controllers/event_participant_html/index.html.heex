@@ -1,23 +1,23 @@
 <.header>
   Listing Event participants
   <:actions>
-    <.link href={~p"/event_participants/new"}>
+    <.link href={~p"/organizer/event_participants/new"}>
       <.button>New Event participant</.button>
     </.link>
   </:actions>
 </.header>
 
-<.table id="event_participants" rows={@event_participants} row_click={&JS.navigate(~p"/event_participants/#{&1}")}>
+<.table id="event_participants" rows={@event_participants} row_click={&JS.navigate(~p"/organizer/event_participants/#{&1}")}>
   <:col :let={event_participant} label="Name"><%= event_participant.name %></:col>
   <:col :let={event_participant} label="Email"><%= event_participant.email %></:col>
   <:action :let={event_participant}>
     <div class="sr-only">
-      <.link navigate={~p"/event_participants/#{event_participant}"}>Show</.link>
+      <.link navigate={~p"/organizer/event_participants/#{event_participant}"}>Show</.link>
     </div>
-    <.link navigate={~p"/event_participants/#{event_participant}/edit"}>Edit</.link>
+    <.link navigate={~p"/organizer/event_participants/#{event_participant}/edit"}>Edit</.link>
   </:action>
   <:action :let={event_participant}>
-    <.link href={~p"/event_participants/#{event_participant}"} method="delete" data-confirm="Are you sure?">
+    <.link href={~p"/organizer/event_participants/#{event_participant}"} method="delete" data-confirm="Are you sure?">
       Delete
     </.link>
   </:action>
