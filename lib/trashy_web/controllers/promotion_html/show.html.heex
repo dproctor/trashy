@@ -2,7 +2,7 @@
   Promotion <%= @promotion.id %>
   <:subtitle>This is a promotion record from your database.</:subtitle>
   <:actions>
-    <.link href={~p"/promotions/#{@promotion}/edit"}>
+    <.link href={~p"/organizer/promotions/#{@promotion}/edit"}>
       <.button>Edit promotion</.button>
     </.link>
   </:actions>
@@ -13,4 +13,4 @@
   <:item title="Details"><%= @promotion.details %></:item>
 </.list>
 
-<.back navigate={~p"/promotions"}>Back to promotions</.back>
+<.back navigate={~p"/organizer/promotions"}>Back to promotions</.back>

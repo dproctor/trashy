@@ -80,7 +80,7 @@ defmodule TrashyWeb.EventController do
   """
   def poster(conn, %{"event_id" => id}) do
     event = Events.get_event!(id)
-    event_checkin_url = Base.encode64(url(conn, ~p"/organizer/event_participants/checkin/#{id}"))
+    event_checkin_url = Base.encode64(url(conn, ~p"/event_participants/checkin/#{id}"))
     render(conn, :poster, event: event, event_checkin_url: event_checkin_url)
   end
 end
