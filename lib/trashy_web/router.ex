@@ -25,7 +25,7 @@ defmodule TrashyWeb.Router do
   end
 
   scope "/", TrashyWeb do
-    pipe_through [:browser, :redirect_if_user_is_authenticated]
+    pipe_through [:browser, :require_authenticated_user, :require_organizer]
 
     resources "/cleanups", CleanupController
     resources "/promotions", PromotionController
