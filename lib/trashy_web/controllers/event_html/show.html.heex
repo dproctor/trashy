@@ -12,6 +12,6 @@
   <:item title="Time"><%= @event.time %></:item>
 </.list>
 
-<img src={~p"/organizer/events/qr_code/#{@event}"} alt="">
+<a href={~p"/organizer/events/poster/#{@event}"}>Poster</a>
 
 <.back navigate={~p"/organizer/events"}>Back to events</.back>
