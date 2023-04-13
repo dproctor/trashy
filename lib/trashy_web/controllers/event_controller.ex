@@ -95,7 +95,10 @@ defmodule TrashyWeb.EventController do
     cleanup = Trashy.Cleanups.get_cleanup!(event.cleanup_id)
 
     html =
-      "<html><body><p>#{cleanup.neighborhood}</p><p>#{cleanup.location}</p><p>#{event.time}</p></body></html>"
+      Phoenix.Template.render_to_string(TrashyWeb.EventHTML, "certificate", "html",
+        event: event,
+        cleanup: cleanup
+      )
 
     {:ok, filename} = PdfGenerator.generate(html, page_size: "A5")
     {:ok, pdf_content} = File.read(filename)
