@@ -5,16 +5,60 @@
       <.button>Edit cleanup</.button>
     </.link>
   </:actions>
-  <:actions>
-    <.link href={~p"/organizer/cleanups/#{@cleanup}/events"}>
-      <.button>See events</.button>
-    </.link>
-  </:actions>
 </.header>
 
 <.list>
   <:item title="Neighborhood"><%= @cleanup.neighborhood %></:item>
   <:item title="Location"><%= @cleanup.location %></:item>
 </.list>
+
+<.header class="mt-10">
+  Events
+  <:actions>
+    <.link href={~p"/organizer/events/new"}>
+      <.button>New Event</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="events" rows={@events} row_click={&JS.navigate(~p"/organizer/events/#{&1}")}>
+  <:col :let={event} label="Time"><%= event.time %></:col>
+  <:action :let={event}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizer/events/#{event}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/organizer/events/#{event}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={event}>
+    <.link href={~p"/organizer/events/#{event}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.header class="mt-10">
+  Promotions
+  <:actions>
+    <.link href={~p"/organizer/promotions/new"}>
+      <.button>New promotion</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="promotions" rows={@promotions} row_click={&JS.navigate(~p"/organizer/events/#{&1}")}>
+  <:col :let={promotion} label="Merchant"><%= promotion.merchant %></:col>
+  <:col :let={promotion} label="Details"><%= promotion.details %></:col>
+  <:action :let={promotion}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizer/promotions/#{promotion}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/organizer/promotions/#{promotion}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={promotion}>
+    <.link href={~p"/organizer/promotions/#{promotion}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
 
 <.back navigate={~p"/organizer/cleanups"}>Back to cleanups</.back>

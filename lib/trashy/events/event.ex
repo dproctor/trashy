@@ -12,7 +12,7 @@ defmodule Trashy.Events.Event do
   @doc false
   def changeset(event, attrs) do
     event
-    |> cast(attrs, [:time])
-    |> validate_required([:time])
+    |> cast(attrs, [:time, :cleanup_id])
+    |> validate_required([:time, :cleanup_id])
   end
 end

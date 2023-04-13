@@ -1,0 +1,22 @@
+<.header>
+  Listing Cleanup organizers
+  <:actions>
+    <.link href={~p"/cleanup_organizers/new"}>
+      <.button>New Cleanup organizer</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="cleanup_organizers" rows={@cleanup_organizers} row_click={&JS.navigate(~p"/cleanup_organizers/#{&1}")}>
+  <:action :let={cleanup_organizer}>
+    <div class="sr-only">
+      <.link navigate={~p"/cleanup_organizers/#{cleanup_organizer}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/cleanup_organizers/#{cleanup_organizer}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={cleanup_organizer}>
+    <.link href={~p"/cleanup_organizers/#{cleanup_organizer}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

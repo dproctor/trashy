@@ -1,5 +1,5 @@
 <.header>
-  Listing Promotions
+  My Promotions
   <:actions>
     <.link href={~p"/organizer/promotions/new"}>
       <.button>New Promotion</.button>
@@ -10,6 +10,7 @@
 <.table id="promotions" rows={@promotions} row_click={&JS.navigate(~p"/organizer/promotions/#{&1}")}>
   <:col :let={promotion} label="Merchant"><%= promotion.merchant %></:col>
   <:col :let={promotion} label="Details"><%= promotion.details %></:col>
+  <:col :let={promotion} label="Cleanup"><%= promotion.cleanup_id %></:col>
   <:action :let={promotion}>
     <div class="sr-only">
       <.link navigate={~p"/organizer/promotions/#{promotion}"}>Show</.link>

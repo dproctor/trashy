@@ -1,0 +1,18 @@
+<.header>
+  Events for Cleanup <%= @cleanup.id %>
+</.header>
+
+<.table id="events" rows={@events} row_click={&JS.navigate(~p"/organizer/events/#{&1}")}>
+  <:col :let={event} label="Time"><%= event.time %></:col>
+  <:action :let={cleanup}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizer/cleanups/#{cleanup}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/organizer/cleanups/#{cleanup}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={cleanup}>
+    <.link href={~p"/organizer/cleanups/#{cleanup}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

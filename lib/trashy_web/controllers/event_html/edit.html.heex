@@ -3,6 +3,6 @@
   <:subtitle>Use this form to manage event records in your database.</:subtitle>
 </.header>
 
-<.event_form changeset={@changeset} action={~p"/organizer/events/#{@event}"} />
+<.event_form changeset={@changeset} cleanups={@cleanups} action={~p"/organizer/events/#{@event}"} />
 
 <.back navigate={~p"/organizer/events"}>Back to events</.back>

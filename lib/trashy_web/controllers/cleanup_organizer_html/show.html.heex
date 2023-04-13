@@ -1,0 +1,14 @@
+<.header>
+  Cleanup organizer <%= @cleanup_organizer.id %>
+  <:subtitle>This is a cleanup_organizer record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/cleanup_organizers/#{@cleanup_organizer}/edit"}>
+      <.button>Edit cleanup_organizer</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+</.list>
+
+<.back navigate={~p"/cleanup_organizers"}>Back to cleanup_organizers</.back>

@@ -22,6 +22,23 @@ defmodule Trashy.Promotions do
   end
 
   @doc """
+  Returns the list of promotions for the provided cleanup.
+
+  ## Examples
+
+      iex> list_promotions_for_cleanup(promotion)
+      [%Promotion{}, ...]
+
+  """
+  def list_promotions_for_cleanup(cleanup) do
+    Repo.all(
+      from promotion in Promotion,
+        where: promotion.cleanup_id == ^cleanup.id,
+        distinct: true
+    )
+  end
+
+  @doc """
   Gets a single promotion.
 
   Raises `Ecto.NoResultsError` if the Promotion does not exist.

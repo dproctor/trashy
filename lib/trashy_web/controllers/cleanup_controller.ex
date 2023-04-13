@@ -28,7 +28,9 @@ defmodule TrashyWeb.CleanupController do
 
   def show(conn, %{"id" => id}) do
     cleanup = Cleanups.get_cleanup!(id)
-    render(conn, :show, cleanup: cleanup)
+    events = Trashy.Events.list_events_for_cleanup(cleanup)
+    promotions = Trashy.Promotions.list_promotions_for_cleanup(cleanup)
+    render(conn, :show, cleanup: cleanup, events: events, promotions: promotions)
   end
 
   def edit(conn, %{"id" => id}) do
