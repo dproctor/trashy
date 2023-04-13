@@ -1,6 +1,6 @@
 <.header>
   Event <%= @event.id %>
-  <:subtitle>This is a event record from your database.</:subtitle>
+  <:subtitle><%= "#{@cleanup.neighborhood} (#{@cleanup.location})"%></:subtitle>
   <:actions>
     <.link href={~p"/organizer/events/#{@event}/edit"}>
       <.button>Edit event</.button>
@@ -10,8 +10,8 @@
 
 <.list>
   <:item title="Time"><%= @event.time %></:item>
+  <:item title="Poster"> <a href={~p"/organizer/events/poster/#{@event}"}>Link</a></:item>
+  <:item title="Certificate"> <a href={~p"/organizer/events/certificate/#{@event}"}>Link</a></:item>
 </.list>
-
-<a href={~p"/organizer/events/poster/#{@event}"}>Poster</a>
 
 <.back navigate={~p"/organizer/events"}>Back to events</.back>

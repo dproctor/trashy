@@ -5,7 +5,7 @@ defmodule TrashyWeb.CleanupController do
   alias Trashy.Cleanups.Cleanup
 
   def index(conn, _params) do
-    cleanups = Cleanups.list_cleanups()
+    cleanups = Cleanups.list_cleanups_for_user(conn.assigns.current_user)
     render(conn, :index, cleanups: cleanups)
   end
 
@@ -58,5 +58,11 @@ defmodule TrashyWeb.CleanupController do
     conn
     |> put_flash(:info, "Cleanup deleted successfully.")
     |> redirect(to: ~p"/organizer/cleanups")
+  end
+
+  def events(conn, %{"cleanup_id" => cleanup_id}) do
+    cleanup = Cleanups.get_cleanup!(cleanup_id)
+    events = Trashy.Events.list_events_for_cleanup(cleanup)
+    render(conn, :events, cleanup: cleanup, events: events)
   end
 end

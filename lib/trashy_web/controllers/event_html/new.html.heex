@@ -1,8 +1,7 @@
 <.header>
   New Event
-  <:subtitle>Use this form to manage event records in your database.</:subtitle>
 </.header>
 
-<.event_form changeset={@changeset} action={~p"/organizer/events"} />
+<.event_form changeset={@changeset} cleanups={@cleanups} action={~p"/organizer/events"} />
 
 <.back navigate={~p"/organizer/events"}>Back to events</.back>

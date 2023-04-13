@@ -1,14 +1,19 @@
 <.header>
   Cleanup <%= @cleanup.id %>
-  <:subtitle>This is a cleanup record from your database.</:subtitle>
   <:actions>
     <.link href={~p"/organizer/cleanups/#{@cleanup}/edit"}>
       <.button>Edit cleanup</.button>
     </.link>
   </:actions>
+  <:actions>
+    <.link href={~p"/organizer/cleanups/#{@cleanup}/events"}>
+      <.button>See events</.button>
+    </.link>
+  </:actions>
 </.header>
 
 <.list>
+  <:item title="Neighborhood"><%= @cleanup.neighborhood %></:item>
   <:item title="Location"><%= @cleanup.location %></:item>
 </.list>
 

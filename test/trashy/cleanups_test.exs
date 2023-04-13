@@ -56,4 +56,56 @@ defmodule Trashy.CleanupsTest do
       assert %Ecto.Changeset{} = Cleanups.change_cleanup(cleanup)
     end
   end
+
+  describe "cleanup_organizers" do
+    alias Trashy.Cleanups.CleanupOrganizer
+
+    import Trashy.CleanupsFixtures
+
+    @invalid_attrs %{}
+
+    test "list_cleanup_organizers/0 returns all cleanup_organizers" do
+      cleanup_organizer = cleanup_organizer_fixture()
+      assert Cleanups.list_cleanup_organizers() == [cleanup_organizer]
+    end
+
+    test "get_cleanup_organizer!/1 returns the cleanup_organizer with given id" do
+      cleanup_organizer = cleanup_organizer_fixture()
+      assert Cleanups.get_cleanup_organizer!(cleanup_organizer.id) == cleanup_organizer
+    end
+
+    test "create_cleanup_organizer/1 with valid data creates a cleanup_organizer" do
+      valid_attrs = %{}
+
+      assert {:ok, %CleanupOrganizer{} = cleanup_organizer} = Cleanups.create_cleanup_organizer(valid_attrs)
+    end
+
+    test "create_cleanup_organizer/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Cleanups.create_cleanup_organizer(@invalid_attrs)
+    end
+
+    test "update_cleanup_organizer/2 with valid data updates the cleanup_organizer" do
+      cleanup_organizer = cleanup_organizer_fixture()
+      update_attrs = %{}
+
+      assert {:ok, %CleanupOrganizer{} = cleanup_organizer} = Cleanups.update_cleanup_organizer(cleanup_organizer, update_attrs)
+    end
+
+    test "update_cleanup_organizer/2 with invalid data returns error changeset" do
+      cleanup_organizer = cleanup_organizer_fixture()
+      assert {:error, %Ecto.Changeset{}} = Cleanups.update_cleanup_organizer(cleanup_organizer, @invalid_attrs)
+      assert cleanup_organizer == Cleanups.get_cleanup_organizer!(cleanup_organizer.id)
+    end
+
+    test "delete_cleanup_organizer/1 deletes the cleanup_organizer" do
+      cleanup_organizer = cleanup_organizer_fixture()
+      assert {:ok, %CleanupOrganizer{}} = Cleanups.delete_cleanup_organizer(cleanup_organizer)
+      assert_raise Ecto.NoResultsError, fn -> Cleanups.get_cleanup_organizer!(cleanup_organizer.id) end
+    end
+
+    test "change_cleanup_organizer/1 returns a cleanup_organizer changeset" do
+      cleanup_organizer = cleanup_organizer_fixture()
+      assert %Ecto.Changeset{} = Cleanups.change_cleanup_organizer(cleanup_organizer)
+    end
+  end
 end

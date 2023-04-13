@@ -4,6 +4,7 @@
   </.error>
   <.input field={f[:merchant]} type="text" label="Merchant" />
   <.input field={f[:details]} type="text" label="Details" />
+  <.input field={f[:cleanup_id]} type="select" label="Cleanup" prompt="Select a cleanup" options={@cleanups |> Enum.map(fn c -> {c.neighborhood, c.id} end)} />
   <:actions>
     <.button>Save Promotion</.button>
   </:actions>

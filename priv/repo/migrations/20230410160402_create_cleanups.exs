@@ -4,6 +4,7 @@ defmodule Trashy.Repo.Migrations.CreateCleanups do
   def change do
     create table(:cleanups) do
       add :location, :string
+      add :neighborhood, :string
 
       timestamps()
     end

@@ -11,7 +11,8 @@ defmodule TrashyWeb.PromotionController do
 
   def new(conn, _params) do
     changeset = Promotions.change_promotion(%Promotion{})
-    render(conn, :new, changeset: changeset)
+    cleanups = Trashy.Cleanups.list_cleanups_for_user(conn.assigns.current_user)
+    render(conn, :new, changeset: changeset, cleanups: cleanups)
   end
 
   def create(conn, %{"promotion" => promotion_params}) do
@@ -34,7 +35,8 @@ defmodule TrashyWeb.PromotionController do
   def edit(conn, %{"id" => id}) do
     promotion = Promotions.get_promotion!(id)
     changeset = Promotions.change_promotion(promotion)
-    render(conn, :edit, promotion: promotion, changeset: changeset)
+    cleanups = Trashy.Cleanups.list_cleanups_for_user(conn.assigns.current_user)
+    render(conn, :edit, promotion: promotion, changeset: changeset, cleanups: cleanups)
   end
 
   def update(conn, %{"id" => id, "promotion" => promotion_params}) do

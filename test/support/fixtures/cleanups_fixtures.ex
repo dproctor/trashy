@@ -17,4 +17,18 @@ defmodule Trashy.CleanupsFixtures do
 
     cleanup
   end
+
+  @doc """
+  Generate a cleanup_organizer.
+  """
+  def cleanup_organizer_fixture(attrs \\ %{}) do
+    {:ok, cleanup_organizer} =
+      attrs
+      |> Enum.into(%{
+
+      })
+      |> Trashy.Cleanups.create_cleanup_organizer()
+
+    cleanup_organizer
+  end
 end

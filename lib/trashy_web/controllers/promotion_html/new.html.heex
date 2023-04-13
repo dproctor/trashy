@@ -3,6 +3,6 @@
   <:subtitle>Use this form to manage promotion records in your database.</:subtitle>
 </.header>
 
-<.promotion_form changeset={@changeset} action={~p"/organizer/promotions"} />
+<.promotion_form changeset={@changeset} cleanups={@cleanups} action={~p"/organizer/promotions"} />
 
 <.back navigate={~p"/organizer/promotions"}>Back to promotions</.back>

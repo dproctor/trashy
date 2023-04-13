@@ -13,7 +13,7 @@ defmodule Trashy.Promotions.Promotion do
   @doc false
   def changeset(promotion, attrs) do
     promotion
-    |> cast(attrs, [:merchant, :details])
-    |> validate_required([:merchant, :details])
+    |> cast(attrs, [:merchant, :details, :cleanup_id])
+    |> validate_required([:merchant, :details, :cleanup_id])
   end
 end

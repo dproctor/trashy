@@ -11,7 +11,8 @@ defmodule TrashyWeb.EventController do
 
   def new(conn, _params) do
     changeset = Events.change_event(%Event{})
-    render(conn, :new, changeset: changeset)
+    cleanups = Trashy.Cleanups.list_cleanups_for_user(conn.assigns.current_user)
+    render(conn, :new, changeset: changeset, cleanups: cleanups)
   end
 
   def create(conn, %{"event" => event_params}) do
@@ -28,13 +29,15 @@ defmodule TrashyWeb.EventController do
 
   def show(conn, %{"id" => id}) do
     event = Events.get_event!(id)
-    render(conn, :show, event: event)
+    cleanup = Trashy.Cleanups.get_cleanup_with_preloads(event.cleanup_id)
+    render(conn, :show, event: event, cleanup: cleanup)
   end
 
   def edit(conn, %{"id" => id}) do
     event = Events.get_event!(id)
     changeset = Events.change_event(event)
-    render(conn, :edit, event: event, changeset: changeset)
+    cleanups = Trashy.Cleanups.list_cleanups_for_user(conn.assigns.current_user)
+    render(conn, :edit, event: event, changeset: changeset, cleanups: cleanups)
   end
 
   def update(conn, %{"id" => id, "event" => event_params}) do
@@ -82,5 +85,23 @@ defmodule TrashyWeb.EventController do
     event = Events.get_event!(id)
     event_checkin_url = Base.encode64(url(conn, ~p"/event_participants/checkin/#{id}"))
     render(conn, :poster, event: event, event_checkin_url: event_checkin_url)
+  end
+
+  @doc """
+  A certificate sutiable for printing for distributing at an event.
+  """
+  def certificate(conn, %{"event_id" => id}) do
+    event = Events.get_event!(id)
+    cleanup = Trashy.Cleanups.get_cleanup!(event.cleanup_id)
+
+    html =
+      "<html><body><p>#{cleanup.neighborhood}</p><p>#{cleanup.location}</p><p>#{event.time}</p></body></html>"
+
+    {:ok, filename} = PdfGenerator.generate(html, page_size: "A5")
+    {:ok, pdf_content} = File.read(filename)
+
+    conn
+    |> put_resp_content_type("application/pdf")
+    |> send_resp(200, pdf_content)
   end
 end

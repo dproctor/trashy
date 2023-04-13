@@ -39,6 +39,9 @@ defmodule TrashyWeb.Router do
 
     get "/events/qr_code/:url", EventController, :qr_code
     get "/events/poster/:event_id", EventController, :poster
+    get "/events/certificate/:event_id", EventController, :certificate
+
+    get "/cleanups/:cleanup_id/events", CleanupController, :events
   end
 
   # Other scopes may use custom stacks.

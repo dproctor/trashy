@@ -22,6 +22,23 @@ defmodule Trashy.Events do
   end
 
   @doc """
+  Returns the list of events.
+
+  ## Examples
+
+      iex> list_events_for_cleanup(cleanup)
+      [%Event{}, ...]
+
+  """
+  def list_events_for_cleanup(cleanup) do
+    Repo.all(
+      from event in Event,
+        where: event.cleanup_id == ^cleanup.id,
+        distinct: true
+    )
+  end
+
+  @doc """
   Gets a single event.
 
   Raises `Ecto.NoResultsError` if the Event does not exist.

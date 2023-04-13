@@ -10,6 +10,9 @@ defmodule Trashy.Accounts.User do
     field :name, :string
     field :is_organizer, :boolean
 
+    many_to_many :cleanups, Trashy.Cleanups.Cleanup,
+      join_through: Trashy.Cleanups.CleanupOrganizer
+
     timestamps()
   end
 
