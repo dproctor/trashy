@@ -14,7 +14,7 @@ defmodule Trashy.Events.EventParticipant do
   @doc false
   def changeset(event_participant, attrs) do
     event_participant
-    |> cast(attrs, [:name, :email])
-    |> validate_required([:name, :email])
+    |> cast(attrs, [:name, :email, :event_id])
+    |> validate_required([:name, :email, :event_id])
   end
 end

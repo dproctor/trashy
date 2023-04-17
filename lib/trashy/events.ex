@@ -135,6 +135,23 @@ defmodule Trashy.Events do
   end
 
   @doc """
+  Returns the list of event_participants for a cleanup.
+
+  ## Examples
+
+      iex> list_event_participants_for_event(event)
+      [%EventParticipant{}, ...]
+
+  """
+  def list_event_participants_for_event(event) do
+    Repo.all(
+      from participant in EventParticipant,
+        where: participant.event_id == ^event.id,
+        distinct: true
+    )
+  end
+
+  @doc """
   Gets a single event_participant.
 
   Raises `Ecto.NoResultsError` if the Event participant does not exist.

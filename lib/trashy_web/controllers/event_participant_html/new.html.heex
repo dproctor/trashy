@@ -1,8 +1,7 @@
 <.header>
   New Event participant
-  <:subtitle>Use this form to manage event_participant records in your database.</:subtitle>
 </.header>
 
-<.event_participant_form changeset={@changeset} action={~p"/organizer/event_participants"} />
+<.event_participant_form changeset={@changeset} action={~p"/organizer/events/#{@event_id}/event_participants"} />
 
-<.back navigate={~p"/organizer/event_participants"}>Back to event_participants</.back>
+<.back navigate={~p"/organizer/events/#{@event_id}"}>Back to event</.back>

@@ -14,4 +14,29 @@
   <:item title="Certificate"> <a href={~p"/organizer/events/certificate/#{@event}"}>Link</a></:item>
 </.list>
 
+<.header class="mt-10">
+  Participants
+  <:actions>
+    <.link href={~p"/organizer/events/#{@event.id}/event_participants/new"}>
+      <.button>New Participant</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="event_participants" rows={@event_participants} row_click={&JS.navigate(~p"/organizer/events/#{&1}")}>
+  <:col :let={participant} label="Email"><%= participant.email %></:col>
+  <:col :let={participant} label="Name"><%= participant.name %></:col>
+  <:action :let={participant}>
+    <div class="sr-only">
+      <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={participant}>
+    <.link href={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
 <.back navigate={~p"/organizer/events"}>Back to events</.back>

@@ -9,17 +9,17 @@ defmodule TrashyWeb.EventParticipantController do
     render(conn, :index, event_participants: event_participants)
   end
 
-  def new(conn, _params) do
-    changeset = Events.change_event_participant(%EventParticipant{})
-    render(conn, :new, changeset: changeset)
+  def new(conn, %{"event_id" => event_id}) do
+    changeset = Events.change_event_participant(%EventParticipant{event_id: event_id})
+    render(conn, :new, changeset: changeset, event_id: event_id)
   end
 
-  def create(conn, %{"event_participant" => event_participant_params}) do
+  def create(conn, %{"event_participant" => event_participant_params, "event_id" => event_id}) do
     case Events.create_event_participant(event_participant_params) do
-      {:ok, event_participant} ->
+      {:ok, _event_participant} ->
         conn
         |> put_flash(:info, "Event participant created successfully.")
-        |> redirect(to: ~p"/organizer/event_participants/#{event_participant}")
+        |> redirect(to: ~p"/organizer/events/#{event_id}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -37,27 +37,31 @@ defmodule TrashyWeb.EventParticipantController do
     render(conn, :edit, event_participant: event_participant, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "event_participant" => event_participant_params}) do
+  def update(conn, %{
+        "id" => id,
+        "event_participant" => event_participant_params,
+        "event_id" => event_id
+      }) do
     event_participant = Events.get_event_participant!(id)
 
     case Events.update_event_participant(event_participant, event_participant_params) do
-      {:ok, event_participant} ->
+      {:ok, _event_participant} ->
         conn
         |> put_flash(:info, "Event participant updated successfully.")
-        |> redirect(to: ~p"/organizer/event_participants/#{event_participant}")
+        |> redirect(to: ~p"/organizer/events/#{event_id}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :edit, event_participant: event_participant, changeset: changeset)
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => id, "event_id" => event_id}) do
     event_participant = Events.get_event_participant!(id)
     {:ok, _event_participant} = Events.delete_event_participant(event_participant)
 
     conn
     |> put_flash(:info, "Event participant deleted successfully.")
-    |> redirect(to: ~p"/organizer/event_participants")
+    |> redirect(to: ~p"/organizer/events/#{event_id}")
   end
 
   def checkin(conn, %{"event_id" => event_id}) do

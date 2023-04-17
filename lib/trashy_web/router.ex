@@ -34,8 +34,10 @@ defmodule TrashyWeb.Router do
     get "/", PageController, :organizer
     resources "/cleanups", CleanupController
     resources "/promotions", PromotionController
-    resources "/events", EventController
-    resources "/event_participants", EventParticipantController
+
+    resources "/events", EventController do
+      resources "/event_participants", EventParticipantController
+    end
 
     get "/events/qr_code/:url", EventController, :qr_code
     get "/events/poster/:event_id", EventController, :poster

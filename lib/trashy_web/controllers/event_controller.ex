@@ -30,7 +30,8 @@ defmodule TrashyWeb.EventController do
   def show(conn, %{"id" => id}) do
     event = Events.get_event!(id)
     cleanup = Trashy.Cleanups.get_cleanup_with_preloads(event.cleanup_id)
-    render(conn, :show, event: event, cleanup: cleanup)
+    participants = Trashy.Events.list_event_participants_for_event(event)
+    render(conn, :show, event: event, cleanup: cleanup, event_participants: participants)
   end
 
   def edit(conn, %{"id" => id}) do
