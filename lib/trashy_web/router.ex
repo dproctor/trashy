@@ -26,6 +26,8 @@ defmodule TrashyWeb.Router do
     put "/event_participants/checkin/:event_id/record_attendance",
         EventParticipantController,
         :record_attendance
+
+    live "/event_participants/certificate/:participant_id", CertificateLive
   end
 
   scope "/organizer", TrashyWeb do

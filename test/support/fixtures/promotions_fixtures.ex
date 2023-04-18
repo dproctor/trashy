@@ -18,4 +18,18 @@ defmodule Trashy.PromotionsFixtures do
 
     promotion
   end
+
+  @doc """
+  Generate a event_participant_promotion.
+  """
+  def event_participant_promotion_fixture(attrs \\ %{}) do
+    {:ok, event_participant_promotion} =
+      attrs
+      |> Enum.into(%{
+        is_claimed: true
+      })
+      |> Trashy.Promotions.create_event_participant_promotion()
+
+    event_participant_promotion
+  end
 end

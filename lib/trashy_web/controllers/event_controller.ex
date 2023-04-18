@@ -93,7 +93,7 @@ defmodule TrashyWeb.EventController do
   """
   def certificate(conn, %{"event_id" => id}) do
     event = Events.get_event!(id)
-    cleanup = Trashy.Cleanups.get_cleanup!(event.cleanup_id)
+    cleanup = Trashy.Cleanups.get_cleanup_with_preloads(event.cleanup_id)
 
     html =
       Phoenix.Template.render_to_string(TrashyWeb.EventHTML, "certificate", "html",

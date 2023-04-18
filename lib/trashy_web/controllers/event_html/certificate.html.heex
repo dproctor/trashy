@@ -3,5 +3,21 @@
     <p><%= @cleanup.neighborhood %></p>
     <p><%= @cleanup.location %></p>
     <p><%= @event.time %></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Merchant</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for promo <- @cleanup.promotions do %>
+          <tr>
+            <td><%= promo.merchant %></td>
+            <td><%= promo.details %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </body>
 </html>

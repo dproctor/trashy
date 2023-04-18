@@ -19,6 +19,7 @@ defmodule Trashy.Events do
   """
   def list_events do
     Repo.all(Event)
+    |> Repo.preload(:cleanup)
   end
 
   @doc """
@@ -168,7 +169,7 @@ defmodule Trashy.Events do
   def get_event_participant!(id), do: Repo.get!(EventParticipant, id)
 
   @doc """
-  Creates a event_participant.
+  Creates a event_participant, along with the corresponding event_participant_promotions.
 
   ## Examples
 
@@ -180,9 +181,14 @@ defmodule Trashy.Events do
 
   """
   def create_event_participant(attrs \\ %{}) do
-    %EventParticipant{}
-    |> EventParticipant.changeset(attrs)
-    |> Repo.insert()
+    {:ok, event_participant} =
+      %EventParticipant{}
+      |> EventParticipant.changeset(attrs)
+      |> Repo.insert()
+
+    Trashy.Promotions.create_event_participant_promotions(event_participant.id)
+
+    {:ok, event_participant}
   end
 
   @doc """

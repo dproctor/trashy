@@ -4,7 +4,7 @@ defmodule Trashy.Events.Event do
 
   schema "events" do
     field :time, :utc_datetime
-    field :cleanup_id, :id
+    belongs_to :cleanup, Trashy.Cleanups.Cleanup
 
     timestamps()
   end

@@ -9,7 +9,7 @@
 
 <.table id="events" rows={@events} row_click={&JS.navigate(~p"/organizer/events/#{&1}")}>
   <:col :let={event} label="Time"><%= event.time %></:col>
-  <:col :let={event} label="Cleanup"><%= event.cleanup_id %></:col>
+  <:col :let={event} label="Cleanup"><%= event.cleanup.neighborhood %></:col>
   <:action :let={event}>
     <div class="sr-only">
       <.link navigate={~p"/organizer/events/#{event}"}>Show</.link>
