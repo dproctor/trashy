@@ -71,7 +71,7 @@ defmodule TrashyWeb.EventParticipantController do
 
   def record_attendance(conn, %{"event_id" => event_id, "user" => user}) do
     event = Events.get_event!(event_id)
-    _participant = Events.create_event_participant(user)
+    {:ok, participant} = Events.create_event_participant(user)
 
     %{"name" => name, "email" => email} = user
 
@@ -84,6 +84,6 @@ defmodule TrashyWeb.EventParticipantController do
     )
     |> Trashy.Mailer.deliver()
 
-    render(conn, :post_record_attendance, event: event)
+    redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}")
   end
 end

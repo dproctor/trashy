@@ -3,10 +3,10 @@ defmodule Trashy.Promotions.EventParticipantPromotion do
   import Ecto.Changeset
 
   schema "event_participant_promotions" do
-    field :is_claimed, :boolean, default: false
+    field(:is_claimed, :boolean, default: false)
     # field :promotion_id, :id
-    belongs_to :promotion, Trashy.Promotions.Promotion
-    belongs_to :event_participant, Trashy.Events.EventParticipant
+    belongs_to(:promotion, Trashy.Promotions.Promotion)
+    belongs_to(:event_participant, Trashy.Events.EventParticipant)
 
     timestamps()
   end

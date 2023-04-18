@@ -21,7 +21,9 @@ config :trashy, TrashyWeb.Endpoint,
   live_view: [signing_salt: "GIF603p9"]
 
 # Configures the mailer
-config :trashy, Trashy.Mailer, adapter: Swoosh.Adapters.Sendgrid
+config :trashy, Trashy.Mailer,
+  adapter: Swoosh.Adapters.Sendgrid,
+  api_key: System.get_env("SENDGRID_API_KEY")
 
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: Trashy.Finch
 

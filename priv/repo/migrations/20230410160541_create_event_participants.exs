@@ -3,15 +3,16 @@ defmodule Trashy.Repo.Migrations.CreateEventParticipants do
 
   def change do
     create table(:event_participants) do
-      add :name, :string
-      add :email, :string
-      add :user_id, references(:users, on_delete: :nothing)
-      add :event_id, references(:events, on_delete: :nothing)
+      add(:name, :string)
+      add(:email, :string)
+      add(:user_id, references(:users, on_delete: :nothing))
+      add(:event_id, references(:events, on_delete: :nothing))
+      add(:code, :string)
 
       timestamps()
     end
 
-    create index(:event_participants, [:user_id])
-    create index(:event_participants, [:event_id])
+    create(index(:event_participants, [:user_id]))
+    create(index(:event_participants, [:event_id]))
   end
 end

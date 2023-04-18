@@ -113,5 +113,7 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
-  config :trashy, Trashy.Mailer, api_key: System.fetch_env!("SENDGRID_API_KEY")
+  config :trashy, Trashy.Mailer,
+    adapter: Swoosh.Adapters.Sendgrid,
+    api_key: System.get_env("SENDGRID_API_KEY")
 end

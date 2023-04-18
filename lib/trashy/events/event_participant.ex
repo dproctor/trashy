@@ -3,10 +3,11 @@ defmodule Trashy.Events.EventParticipant do
   import Ecto.Changeset
 
   schema "event_participants" do
-    field :email, :string
-    field :name, :string
-    field :user_id, :id
-    field :event_id, :id
+    field(:email, :string)
+    field(:name, :string)
+    field(:user_id, :id)
+    field(:event_id, :id)
+    field(:code, :string, autogenerate: Ecto.UUID.generate())
 
     timestamps()
   end
