@@ -1,0 +1,23 @@
+<.header>
+  Listing Event participant promotions
+  <:actions>
+    <.link href={~p"/event_participant_promotions/new"}>
+      <.button>New Event participant promotion</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="event_participant_promotions" rows={@event_participant_promotions} row_click={&JS.navigate(~p"/event_participant_promotions/#{&1}")}>
+  <:col :let={event_participant_promotion} label="Is claimed"><%= event_participant_promotion.is_claimed %></:col>
+  <:action :let={event_participant_promotion}>
+    <div class="sr-only">
+      <.link navigate={~p"/event_participant_promotions/#{event_participant_promotion}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/event_participant_promotions/#{event_participant_promotion}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={event_participant_promotion}>
+    <.link href={~p"/event_participant_promotions/#{event_participant_promotion}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

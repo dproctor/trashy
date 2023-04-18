@@ -1,0 +1,15 @@
+<.header>
+  Event participant promotion <%= @event_participant_promotion.id %>
+  <:subtitle>This is a event_participant_promotion record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/event_participant_promotions/#{@event_participant_promotion}/edit"}>
+      <.button>Edit event_participant_promotion</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Is claimed"><%= @event_participant_promotion.is_claimed %></:item>
+</.list>
+
+<.back navigate={~p"/event_participant_promotions"}>Back to event_participant_promotions</.back>

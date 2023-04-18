@@ -37,6 +37,7 @@ defmodule Trashy.MixProject do
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       {:finch, "~> 0.13"},
       {:floki, ">= 0.30.0", only: :test},
+      {:gen_smtp, "~> 1.1.1"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:pdf_generator, ">=0.6.0"},

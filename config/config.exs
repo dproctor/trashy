@@ -21,13 +21,11 @@ config :trashy, TrashyWeb.Endpoint,
   live_view: [signing_salt: "GIF603p9"]
 
 # Configures the mailer
-#
-# By default it uses the "Local" adapter which stores the emails
-# locally. You can see the emails in your browser, at "/dev/mailbox".
-#
-# For production it's recommended to configure a different adapter
-# at the `config/runtime.exs`.
-config :trashy, Trashy.Mailer, adapter: Swoosh.Adapters.Local
+config :trashy, Trashy.Mailer,
+  adapter: Swoosh.Adapters.Sendgrid,
+  api_key: System.fetch_env!("SENDGRID_API_KEY")
+
+config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: Trashy.Finch
 
 # Configure esbuild (the version is required)
 config :esbuild,

@@ -5,6 +5,7 @@
   method="put">
   <.input field={@form[:email]} type="email" placeholder="Email" required />
   <.input field={@form[:name]} type="name" placeholder="Name" required />
+  <input id={@form[:event_id].id} name={@form[:event_id].name} type="number" value={@event.id} hidden />
   <:actions>
     <.button phx-disable-with="Sending..." class="w-full">
       Record attendance

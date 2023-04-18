@@ -71,7 +71,19 @@ defmodule TrashyWeb.EventParticipantController do
 
   def record_attendance(conn, %{"event_id" => event_id, "user" => user}) do
     event = Events.get_event!(event_id)
-    Events.create_event_participant(user)
+    _participant = Events.create_event_participant(user)
+
+    %{"name" => name, "email" => email} = user
+
+    Swoosh.Email.new()
+    |> Swoosh.Email.to({name, email})
+    |> Swoosh.Email.from({"TrashySF", "devon.proctor@gmail.com"})
+    |> Swoosh.Email.subject("Your trashy certificate")
+    |> Swoosh.Email.text_body(
+      "Thanks for helping to clean up SF! You can access your rewards at #{~p"/event_participants/certificate/1"}"
+    )
+    |> Trashy.Mailer.deliver()
+
     render(conn, :post_record_attendance, event: event)
   end
 end
