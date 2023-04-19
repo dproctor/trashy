@@ -7,7 +7,7 @@ defmodule Trashy.Events.EventParticipant do
     field(:name, :string)
     field(:user_id, :id)
     field(:event_id, :id)
-    field(:code, :string, autogenerate: Ecto.UUID.generate())
+    field(:code, :string)
 
     timestamps()
   end
@@ -17,5 +17,6 @@ defmodule Trashy.Events.EventParticipant do
     event_participant
     |> cast(attrs, [:name, :email, :event_id])
     |> validate_required([:name, :email, :event_id])
+    |> put_change(:code, Ecto.UUID.generate())
   end
 end

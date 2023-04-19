@@ -27,10 +27,17 @@ defmodule TrashyWeb.CertificateLive do
     """
   end
 
-  def mount(%{"participant_id" => participant_id}, _session, socket) do
-    promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
+  def mount(%{"participant_id" => participant_id, "code" => code}, _session, socket) do
+    participant = Trashy.Events.get_event_participant!(participant_id)
 
-    {:ok, assign(socket, participant_id: participant_id, promotions: promotions)}
+    case code == participant.code do
+      true ->
+        promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
+        {:ok, assign(socket, participant_id: participant_id, promotions: promotions)}
+
+      false ->
+        raise TrashyWeb.CertificateLive.InvalidCodeError
+    end
   end
 
   def handle_event(
@@ -50,4 +57,8 @@ defmodule TrashyWeb.CertificateLive do
         {:noreply, assign(socket, success: true, promotions: promotions)}
     end
   end
+end
+
+defmodule TrashyWeb.CertificateLive.InvalidCodeError do
+  defexception message: "invalid code", plug_status: 404
 end

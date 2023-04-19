@@ -64,9 +64,20 @@ defmodule TrashyWeb.EventParticipantController do
     |> redirect(to: ~p"/organizer/events/#{event_id}")
   end
 
-  def checkin(conn, %{"event_id" => event_id}) do
+  def checkin(conn, %{"event_id" => event_id, "code" => code}) do
     event = Events.get_event!(event_id)
-    render(conn, :checkin, event: event, form: Phoenix.HTML.FormData.to_form(%{}, as: "user"))
+
+    case code == event.code do
+      true ->
+        render(conn, :checkin, event: event, form: Phoenix.HTML.FormData.to_form(%{}, as: "user"))
+
+      false ->
+        conn
+        |> put_status(:not_found)
+        |> Phoenix.Controller.put_view(TrashyWeb.ErrorHTML)
+        |> Phoenix.Controller.render(:"404")
+        |> halt()
+    end
   end
 
   def record_attendance(conn, %{"event_id" => event_id, "user" => user}) do
@@ -84,6 +95,6 @@ defmodule TrashyWeb.EventParticipantController do
     )
     |> Trashy.Mailer.deliver()
 
-    redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}")
+    redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}/#{participant.code}")
   end
 end
