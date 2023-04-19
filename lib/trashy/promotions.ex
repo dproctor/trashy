@@ -20,6 +20,7 @@ defmodule Trashy.Promotions do
   """
   def list_promotions do
     Repo.all(Promotion)
+    |> Repo.preload(:cleanup)
   end
 
   @doc """
@@ -33,9 +34,10 @@ defmodule Trashy.Promotions do
   """
   def list_promotions_for_cleanup(cleanup) do
     Repo.all(
-      from promotion in Promotion,
+      from(promotion in Promotion,
         where: promotion.cleanup_id == ^cleanup.id,
         distinct: true
+      )
     )
   end
 
@@ -53,7 +55,10 @@ defmodule Trashy.Promotions do
       ** (Ecto.NoResultsError)
 
   """
-  def get_promotion!(id), do: Repo.get!(Promotion, id)
+  def get_promotion!(id),
+    do:
+      Repo.get!(Promotion, id)
+      |> Repo.preload(:cleanup)
 
   @doc """
   Creates a promotion.
@@ -146,11 +151,12 @@ defmodule Trashy.Promotions do
   """
   def list_event_participant_promotions(participant_id) do
     Repo.all(
-      from promotion in EventParticipantPromotion,
+      from(promotion in EventParticipantPromotion,
         where: promotion.event_participant_id == ^participant_id,
         distinct: true,
         order_by: [desc: promotion.id],
         preload: [:promotion]
+      )
     )
   end
 

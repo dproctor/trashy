@@ -3,9 +3,9 @@ defmodule Trashy.Promotions.Promotion do
   import Ecto.Changeset
 
   schema "promotions" do
-    field :details, :string
-    field :merchant, :string
-    field :cleanup_id, :id
+    field(:details, :string)
+    field(:merchant, :string)
+    belongs_to(:cleanup, Trashy.Cleanups.Cleanup)
 
     timestamps()
   end

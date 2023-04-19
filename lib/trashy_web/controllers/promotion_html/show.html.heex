@@ -10,7 +10,7 @@
 <.list>
   <:item title="Merchant"><%= @promotion.merchant %></:item>
   <:item title="Details"><%= @promotion.details %></:item>
-  <:item title="Cleanup"><%= @promotion.cleanup_id %></:item>
+  <:item title="Cleanup"><%= @promotion.cleanup.neighborhood %></:item>
 </.list>
 
 <.back navigate={~p"/organizer/promotions"}>Back to promotions</.back>
