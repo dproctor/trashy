@@ -1,6 +1,7 @@
 defmodule TrashyWeb.EventParticipantController do
   use TrashyWeb, :controller
 
+  alias TrashyWeb.CertificateLive
   alias Trashy.Events
   alias Trashy.Events.EventParticipant
 
@@ -16,7 +17,9 @@ defmodule TrashyWeb.EventParticipantController do
 
   def create(conn, %{"event_participant" => event_participant_params, "event_id" => event_id}) do
     case Events.create_event_participant(event_participant_params) do
-      {:ok, _event_participant} ->
+      {:ok, event_participant} ->
+        send_confirmation_email(conn, event_participant)
+
         conn
         |> put_flash(:info, "Event participant created successfully.")
         |> redirect(to: ~p"/organizer/events/#{event_id}")
@@ -86,15 +89,19 @@ defmodule TrashyWeb.EventParticipantController do
 
     %{"name" => name, "email" => email} = user
 
+    send_confirmation_email(conn, participant)
+    redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}/#{participant.code}")
+  end
+
+  defp send_confirmation_email(conn, participant) do
+    text_body =
+      "Thanks for helping to clean up SF! You can access your rewards at #{TrashyWeb.Router.Helpers.live_url(conn, CertificateLive, participant.id, participant.code)}"
+
     Swoosh.Email.new()
-    |> Swoosh.Email.to({name, email})
+    |> Swoosh.Email.to({participant.name, participant.email})
     |> Swoosh.Email.from({"TrashySF", "devon.proctor@gmail.com"})
     |> Swoosh.Email.subject("Your trashy certificate")
-    |> Swoosh.Email.text_body(
-      "Thanks for helping to clean up SF! You can access your rewards at #{~p"/event_participants/certificate/1"}"
-    )
+    |> Swoosh.Email.text_body(text_body)
     |> Trashy.Mailer.deliver()
-
-    redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}/#{participant.code}")
   end
 end

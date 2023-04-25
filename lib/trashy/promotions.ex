@@ -208,8 +208,6 @@ defmodule Trashy.Promotions do
     event = Trashy.Events.get_event!(participant.event_id)
     cleanup = Trashy.Cleanups.get_cleanup_with_preloads(event.cleanup_id)
 
-    IO.puts("DEVON")
-
     cleanup.promotions
     |> Enum.map(fn promo ->
       %EventParticipantPromotion{}
