@@ -7,23 +7,36 @@ defmodule TrashyWeb.CertificateLive do
       Certificate
       <:subtitle>Claim your rewards</:subtitle>
     </.header>
-    <.table id="promotions" rows={@promotions}>
-      <:col :let={promotion} label="Merchant"><%= promotion.promotion.merchant %></:col>
-      <:col :let={promotion} label="Details"><%= promotion.promotion.details %></:col>
-      <:col :let={promotion} label="Claimed">
-        <.input
-          field={promotion.is_claimed}
-          name="devon"
-          value={promotion.is_claimed}
-          type="checkbox"
-          phx-click="claim_reward"
-          phx-value-promotion_id={promotion.id}
-          disabled={promotion.is_claimed}
-          phx-disconnected={JS.set_attribute({"readonly", true})}
-          phx-connected={JS.remove_attribute("readonly")}
-        />
-      </:col>
-    </.table>
+    <table class="table-fixed">
+      <thead>
+        <tr>
+          <th>Merchant</th>
+          <th>Details</th>
+          <th>Claimed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for promotion <- @promotions do %>
+          <tr>
+            <td><%= promotion.promotion.merchant %></td>
+            <td><%= promotion.promotion.details %></td>
+            <td>
+              <.input
+                field={promotion.is_claimed}
+                value={promotion.is_claimed}
+                name="promotion"
+                type="checkbox"
+                phx-click="claim_reward"
+                phx-value-promotion_id={promotion.id}
+                disabled={promotion.is_claimed}
+                phx-disconnected={JS.set_attribute({"readonly", true})}
+                phx-connected={JS.remove_attribute("readonly")}
+              />
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
     """
   end
 

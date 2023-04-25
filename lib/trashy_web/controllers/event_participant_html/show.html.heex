@@ -13,7 +13,7 @@
   <:item title="Email"><%= @event_participant.email %></:item>
 </.list>
 
-<.link href={~p"/event_participants/certificate/#{@event_participant}"}>
+<.link href={~p"/event_participants/certificate/#{@event_participant}/#{@event_participant.code}"}>
 Live certificate
 </.link>
 
