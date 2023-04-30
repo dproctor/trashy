@@ -8,6 +8,7 @@ defmodule Trashy.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     field :name, :string
+    field :last_name, :string
     field :is_organizer, :boolean
 
     many_to_many :cleanups, Trashy.Cleanups.Cleanup,

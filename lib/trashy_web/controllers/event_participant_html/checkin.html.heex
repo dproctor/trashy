@@ -3,8 +3,9 @@
   id="record_attendance_form"
   action={~p"/event_participants/checkin/#{@event.id}/#{@event.code}/record_attendance"}
   method="put">
+  <.input field={@form[:name]} type="name" placeholder="First Name" required />
+  <.input field={@form[:last_name]} type="name" placeholder="Last Name" required />
   <.input field={@form[:email]} type="email" placeholder="Email" required />
-  <.input field={@form[:name]} type="name" placeholder="Name" required />
   <input id={@form[:event_id].id} name={@form[:event_id].name} type="number" value={@event.id} hidden />
   <:actions>
     <.button phx-disable-with="Sending..." class="w-full">
