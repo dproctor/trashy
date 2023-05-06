@@ -1,0 +1,16 @@
+<.header>
+  Registration <%= @registration.id %>
+  <:subtitle>This is a registration record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/registrations/#{@registration}/edit"}>
+      <.button>Edit registration</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @registration.name %></:item>
+  <:item title="Email"><%= @registration.email %></:item>
+</.list>
+
+<.back navigate={~p"/registrations"}>Back to registrations</.back>

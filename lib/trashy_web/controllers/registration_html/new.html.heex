@@ -1,0 +1,8 @@
+<.header>
+  New Registration
+  <:subtitle>Use this form to manage registration records in your database.</:subtitle>
+</.header>
+
+<.registration_form changeset={@changeset} action={~p"/registrations"} />
+
+<.back navigate={~p"/registrations"}>Back to registrations</.back>

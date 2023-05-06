@@ -1,0 +1,24 @@
+<.header>
+  Listing Registrations
+  <:actions>
+    <.link href={~p"/registrations/new"}>
+      <.button>New Registration</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="registrations" rows={@registrations} row_click={&JS.navigate(~p"/registrations/#{&1}")}>
+  <:col :let={registration} label="Name"><%= registration.name %></:col>
+  <:col :let={registration} label="Email"><%= registration.email %></:col>
+  <:action :let={registration}>
+    <div class="sr-only">
+      <.link navigate={~p"/registrations/#{registration}"}>Show</.link>
+    </div>
+    <.link navigate={~p"/registrations/#{registration}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={registration}>
+    <.link href={~p"/registrations/#{registration}"} method="delete" data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>

@@ -20,8 +20,13 @@ ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 
 FROM ${BUILDER_IMAGE} as builder
 
+# Add yarn repo
+RUN apt-get update -y && apt-get install -y curl gnupg
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
 # install build dependencies
-RUN apt-get update -y && apt-get install -y build-essential git \
+RUN apt-get update -y && apt-get install -y build-essential git yarn \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # prepare build dir
@@ -50,6 +55,9 @@ COPY priv priv
 COPY lib lib
 
 COPY assets assets
+
+# Install npm dependencies
+RUN cd assets && yarn install --progress=false --no-audit --loglevel=error && cd ../
 
 # compile assets
 RUN mix assets.deploy

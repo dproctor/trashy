@@ -1,8 +1,20 @@
 <.flash_group flash={@flash} />
-<div>
-Feeling trashy? 💩
-</div>
+<div class="hero min-h-screen" style="background-image: url(/images/mannys-cleanup.jpeg);">
+  <div class="hero-overlay bg-opacity-60"></div>
+  <div class="hero-content text-center text-neutral-content">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-5xl font-bold">Clean Up The City</h1>
+      <p class="mb-5">San Franciscans taking action to build community, beautify our public spaces, and improve the best city in the world!</p>
 
-<div>
-  <a href={~p"/organizer"}>Organizer view</a>
+      <.simple_form for={@changeset} action={~p"/registrations"} >
+        <.input field={@changeset[:name]} label="Name" placeholder="Name"/>
+        <.input field={@changeset[:email]} label="Email" placeholder="Email"/>
+        <.input type="select" field={@changeset[:cleanup_id]} label="Cleanup" options={@cleanups |> Enum.map(fn c -> {"#{c.neighborhood}", c.id} end)}/>
+        <:actions>
+          <.button>Get Involved</.button>
+        </:actions>
+      </.simple_form>
+
+    </div>
+  </div>
 </div>
