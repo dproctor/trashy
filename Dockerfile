@@ -26,8 +26,12 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 # install build dependencies
-RUN apt-get update -y && apt-get install -y build-essential git yarn \
+RUN apt-get update -y && apt-get install -y build-essential git yarn nodejs npm \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# Upgrade node engine
+RUN npm i -g n
+RUN n latest
 
 # prepare build dir
 WORKDIR /app

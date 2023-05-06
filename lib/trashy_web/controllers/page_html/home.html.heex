@@ -5,16 +5,17 @@
     <div class="max-w-md">
       <h1 class="mb-5 text-5xl font-bold">Clean Up The City</h1>
       <p class="mb-5">San Franciscans taking action to build community, beautify our public spaces, and improve the best city in the world!</p>
+      <p class="mb-5">Join us at one our meighborhood cleanups.</p>
 
-      <.simple_form for={@changeset} action={~p"/registrations"} >
-        <.input field={@changeset[:name]} label="Name" placeholder="Name"/>
-        <.input field={@changeset[:email]} label="Email" placeholder="Email"/>
-        <.input type="select" field={@changeset[:cleanup_id]} label="Cleanup" options={@cleanups |> Enum.map(fn c -> {"#{c.neighborhood}", c.id} end)}/>
-        <:actions>
-          <.button>Get Involved</.button>
-        </:actions>
-      </.simple_form>
-
+      <ul>
+        <li><a class="link" href="https://www.mobilize.us/togethersf/event/413069/">Hayes Valley</a></li>
+        <li><a class="link" href="https://www.mobilize.us/togethersf/event/562592/">Bayview</a></li>
+        <li><a class="link" href="https://www.mobilize.us/togethersf/event/409574/ ">Lower Nob Hill</a></li>
+        <li><a class="link" href="https://www.mobilize.us/togethersf/event/484266/ ">Lower Polk</a></li>
+        <li><a class="link" href="https://www.mobilize.us/togethersf/event/561925/">South Mission</a></li>
+        <li><a class="link" href="https://www.mobilize.us/togethersf/event/399341/">Ocean Beach</a></li>
+        <li><a class="link" href="https://www.mobilize.us/togethersf/event/444979/">Mission (Manny's)</a></li>
+      </ul>
     </div>
   </div>
 </div>
