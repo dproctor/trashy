@@ -87,7 +87,7 @@ defmodule TrashyWeb.EventParticipantController do
     event = Events.get_event!(event_id)
     {:ok, participant} = Events.create_event_participant(user)
 
-    %{"name" => name, "email" => email} = user
+    %{"name" => name, "email" => email, "last_name" => last_name} = user
 
     send_confirmation_email(conn, participant)
     redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}/#{participant.code}")
