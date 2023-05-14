@@ -40,6 +40,7 @@ defmodule Trashy.MixProject do
       {:gen_smtp, "~> 1.1.1"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
+      {:timex, "~> 3.7"},
       {:pdf_generator, ">=0.6.0"},
       {:phoenix, "~> 1.7.1"},
       {:phoenix_ecto, "~> 4.4"},

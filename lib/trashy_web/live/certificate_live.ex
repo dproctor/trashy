@@ -1,8 +1,17 @@
 defmodule TrashyWeb.CertificateLive do
   use TrashyWeb, :live_view
+  import Ecto.DateTime
+  import Timex.Format.DateTime
 
   def render(assigns) do
     ~H"""
+      <.header class="text-center">
+      Thanks, <%= @participant.name %>!
+      <:subtitle>
+      <p><%= @participant.name %> <%= @participant.last_name %></p>
+      <p>Valid <%= @formatted_date %></p>
+      </:subtitle>
+      </.header>
     <.header class="text-center">
       Certificate
       <:subtitle>Claim your rewards</:subtitle>
@@ -45,10 +54,17 @@ defmodule TrashyWeb.CertificateLive do
 
     case code == participant.code do
       true ->
-        promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
+        event = Trashy.Events.get_event!(participant.event_id)
 
-        {:ok,
-         assign(socket, participant_id: participant_id, promotions: promotions, current_user: nil)}
+        formatted_date = event.time
+        |> Ecto.DateTime.from_naive_utc()
+        |> Timex.Format.DateTime.format("{DYYYY}-{0M}-{0D}")
+        # formatted_date = Timex.parse!(event.time, "{YYYY}-{0M}-{0D}")
+        # naive_datetime = NaiveDateTime.from_iso8601(event.time)
+        # formatted_date = NaiveDateTime.truncate(naive_datetime, :day)
+
+        promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
+        {:ok, assign(socket, participant_id: participant_id, promotions: promotions, participant: participant, formatted_date: formatted_date, current_user: nil)}
 
       false ->
         raise TrashyWeb.CertificateLive.InvalidCodeError
