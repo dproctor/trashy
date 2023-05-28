@@ -9,6 +9,7 @@
 
 <.table id="event_participants" rows={@event_participants} row_click={&JS.navigate(~p"/organizer/event_participants/#{&1}")}>
   <:col :let={event_participant} label="Name"><%= event_participant.name %></:col>
+  <:col :let={event_participant} label="Last Name"><%= event_participant.last_name %></:col>
   <:col :let={event_participant} label="Email"><%= event_participant.email %></:col>
   <:action :let={event_participant}>
     <div class="sr-only">

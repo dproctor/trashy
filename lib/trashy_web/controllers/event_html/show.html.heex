@@ -26,6 +26,7 @@
 <.table id="event_participants" rows={@event_participants} row_click={&JS.navigate(~p"/organizer/events/#{@event}/event_participants/#{&1}")}>
   <:col :let={participant} label="Email"><%= participant.email %></:col>
   <:col :let={participant} label="Name"><%= participant.name %></:col>
+  <:col :let={participant} label="Last Name"><%= participant.last_name %></:col>
   <:action :let={participant}>
     <div class="sr-only">
       <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"}>Show</.link>
