@@ -7,6 +7,7 @@ defmodule Trashy.Events do
   alias Trashy.Repo
 
   alias Trashy.Events.Event
+  alias Trashy.Events.EventParticipant
 
   @doc """
   Returns the list of events.
@@ -38,6 +39,35 @@ defmodule Trashy.Events do
         distinct: true
     )
   end
+
+  @doc """
+  Returns the list of events which a participant has attended.
+
+  ## Examples
+
+      iex> list_events_for_participant(cleanup)
+      [%Event{}, ...]
+
+  """
+  def list_cleanups_dates_for_participant(participant) do
+    query = from event_participant in EventParticipant,
+              join: event in Event, on: event_participant.event_id == event.id
+    query = from [event_participant, event] in query,
+              select: %{time: event.time, cleanup_id: event.cleanup_id}
+    Repo.all(query)
+  end
+
+  def get_total_participant_cleanup_count(participant) do
+    list_cleanups_dates_for_participant(participant)
+    |> Enum.count()
+  end
+
+  def get_local_participant_cleanup_count(participant, event) do
+    list_cleanups_dates_for_participant(participant)
+    |> Enum.filter(fn record -> record.cleanup_id == event.cleanup_id end)
+    |> Enum.count()
+  end
+
 
   @doc """
   Gets a single event.

@@ -1,5 +1,5 @@
 <.header>
-  Cleanup <%= @cleanup.id %>
+  Cleanup: <%= @cleanup.neighborhood %>
   <:actions>
     <.link href={~p"/organizer/cleanups/#{@cleanup}/edit"}>
       <.button>Edit cleanup</.button>
@@ -9,6 +9,7 @@
 
 <.list>
   <:item title="Neighborhood"><%= @cleanup.neighborhood %></:item>
+  <:item title="Database ID"><%= @cleanup.id %></:item>
   <:item title="Location"><%= @cleanup.location %></:item>
 </.list>
 

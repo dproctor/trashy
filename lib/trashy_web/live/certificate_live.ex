@@ -1,7 +1,7 @@
 defmodule TrashyWeb.CertificateLive do
   use TrashyWeb, :live_view
-  import Ecto.DateTime
-  import Timex.Format.DateTime
+  # import Ecto.DateTime
+  # import Timex.Format.DateTime
 
   def render(assigns) do
     ~H"""
@@ -10,6 +10,8 @@ defmodule TrashyWeb.CertificateLive do
       <:subtitle>
       <p><%= @participant.name %> <%= @participant.last_name %></p>
       <p>Valid <%= @formatted_date %></p>
+      <p>All-time cleanups: <%= @total_cleanup_count %></p>
+      <p>Cleanups at this site: <%= @local_cleanup_count %></p>
       </:subtitle>
       </.header>
     <.header class="text-center">
@@ -55,16 +57,21 @@ defmodule TrashyWeb.CertificateLive do
     case code == participant.code do
       true ->
         event = Trashy.Events.get_event!(participant.event_id)
+        formatted_date = Calendar.strftime(event.time, "%m/%d/%Y")
 
-        formatted_date = event.time
-        |> Ecto.DateTime.from_naive_utc()
-        |> Timex.Format.DateTime.format("{DYYYY}-{0M}-{0D}")
-        # formatted_date = Timex.parse!(event.time, "{YYYY}-{0M}-{0D}")
-        # naive_datetime = NaiveDateTime.from_iso8601(event.time)
-        # formatted_date = NaiveDateTime.truncate(naive_datetime, :day)
+        total_cleanup_count = Trashy.Events.get_total_participant_cleanup_count(participant)
+        local_cleanup_count = Trashy.Events.get_local_participant_cleanup_count(participant, event)
 
         promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
-        {:ok, assign(socket, participant_id: participant_id, promotions: promotions, participant: participant, formatted_date: formatted_date, current_user: nil)}
+        
+        {:ok, assign(socket,
+        participant_id: participant_id,
+        promotions: promotions,
+        participant: participant,
+        total_cleanup_count: total_cleanup_count,
+        local_cleanup_count: local_cleanup_count,
+        formatted_date: formatted_date,
+        current_user: nil)}
 
       false ->
         raise TrashyWeb.CertificateLive.InvalidCodeError

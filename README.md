@@ -6,8 +6,8 @@ Project setup caveats:
 
 Admin tasks:
 - Set organizers: After a user has registered, set them to be an organizer like `UPDATE users SET is_organizer=True WHERE email='eric.munsing@gmail.com';`
-- Create new cleanups: `INSERT INTO cleanups (location, neighborhood, inserted_at, updated_at) VALUES ('Manny''s', 'Northern Mission', '2023-04-29 00:06:46', '2023-04-29 00:06:46');`
-- Associate an organizer with a cleanup: 
+- Create new cleanups, e.g.: `INSERT INTO cleanups (location, neighborhood, inserted_at, updated_at) VALUES ('Manny''s', 'Northern Mission', '2023-04-29 00:06:46', '2023-04-29 00:06:46');`
+- Associate an organizer with a cleanup, e.g. below (note that you have to adapt the cleanup_id and organizer_id, where organizer_id is the id from the table *users*!): 
 `INSERT INTO cleanup_organizers (cleanup_id, organizer_id, inserted_at, updated_at) VALUES (2, 1, '2023-04-29 00:06:46', '2023-04-29 00:06:46');`
 
 # Phoenix Framework boilerplate
