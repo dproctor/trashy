@@ -1,6 +1,9 @@
 defmodule TrashyWeb.EventParticipantController do
   use TrashyWeb, :controller
 
+  import Logger
+  alias Trashy.Repo
+  import Ecto.Query, warn: false
   alias TrashyWeb.CertificateLive
   alias Trashy.Events
   alias Trashy.Events.EventParticipant
@@ -83,14 +86,32 @@ defmodule TrashyWeb.EventParticipantController do
     end
   end
 
+  def get_event_participant(event, email) do
+    query = from ep in EventParticipant,
+              where: ep.event_id == ^event.id and ep.email == ^email
+    Repo.one(query)
+  end
+
   def record_attendance(conn, %{"event_id" => event_id, "user" => user}) do
     event = Events.get_event!(event_id)
-    {:ok, participant} = Events.create_event_participant(user)
-
     %{"name" => name, "email" => email, "last_name" => last_name} = user
 
-    send_confirmation_email(conn, participant)
+    # Check if event participant already exists
+    participant = get_event_participant(event, email)
+
+    # If no participant exists, create one
+    if participant == nil do
+      {:ok, new_participant} = Events.create_event_participant(user)
+      send_confirmation_email(conn, new_participant)
+      Logger.info("cool new participant id: #{new_participant.id}")
+      participant = new_participant
+      Logger.info("cool participant id is now: #{participant.id}")
+    end
+    Logger.info("cool participant outside of the context is now: #{participant.id}")
+
+    # Once the participant is known to exist, redirect
     redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}/#{participant.code}")
+
   end
 
   defp send_confirmation_email(conn, participant) do

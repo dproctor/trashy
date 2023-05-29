@@ -17,7 +17,7 @@ defmodule Trashy.Events.EventParticipant do
   def changeset(event_participant, attrs) do
     event_participant
     |> cast(attrs, [:name, :last_name, :email, :event_id])
-    |> validate_required([:name, :last_name, :email, :event_id])
+    |> validate_required([:name, :email, :event_id])
     |> put_change(:code, Ecto.UUID.generate())
   end
 end

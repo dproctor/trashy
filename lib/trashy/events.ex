@@ -41,7 +41,7 @@ defmodule Trashy.Events do
   end
 
   @doc """
-  Returns the list of events which a participant has attended.
+  Returns the list of events which a participant has attended, as a list of datetimes and cleanup_ids.
 
   ## Examples
 
@@ -51,6 +51,7 @@ defmodule Trashy.Events do
   """
   def list_cleanups_dates_for_participant(participant) do
     query = from event_participant in EventParticipant,
+              where: event_participant.email == ^participant.email,
               join: event in Event, on: event_participant.event_id == event.id
     query = from [event_participant, event] in query,
               select: %{time: event.time, cleanup_id: event.cleanup_id}
