@@ -6,6 +6,7 @@ defmodule Trashy.Events.EventParticipant do
     field(:email, :string)
     field(:name, :string)
     field(:last_name, :string)
+    field(:instagram, :string)
     field(:user_id, :id)
     field(:event_id, :id)
     field(:code, :string)

@@ -1,7 +1,6 @@
 defmodule TrashyWeb.EventParticipantController do
   use TrashyWeb, :controller
 
-  import Logger
   alias Trashy.Repo
   import Ecto.Query, warn: false
   alias TrashyWeb.CertificateLive
@@ -86,18 +85,15 @@ defmodule TrashyWeb.EventParticipantController do
     end
   end
 
-  def get_event_participant(event, user) do
+  def get_event_participant(event_id, user) do
     query = from ep in EventParticipant,
-              where: ep.event_id == ^event.id and ep.email == ^user.email and ep.name == ^user.name
+              where: ep.event_id == ^event_id and ep.email == ^user["email"] and ep.name == ^user["name"]
     Repo.one(query)
   end
 
   def record_attendance(conn, %{"event_id" => event_id, "user" => user}) do
-    event = Events.get_event!(event_id)
-    %{"name" => name, "email" => email, "last_name" => last_name} = user
-
     # Check if event participant already exists
-    participant = case get_event_participant(event, user) do
+    participant = case get_event_participant(event_id, user) do
       nil ->
         {:ok, participant} = Events.create_event_participant(user)
         send_confirmation_email(conn, participant)

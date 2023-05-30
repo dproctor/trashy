@@ -1,7 +1,5 @@
 defmodule TrashyWeb.CertificateLive do
   use TrashyWeb, :live_view
-  # import Ecto.DateTime
-  # import Timex.Format.DateTime
 
   def render(assigns) do
     ~H"""
@@ -57,22 +55,18 @@ defmodule TrashyWeb.CertificateLive do
     case code == participant.code do
       true ->
         event = Trashy.Events.get_event!(participant.event_id)
-        formatted_date = Calendar.strftime(event.time, "%m/%d/%Y")
 
-        total_cleanup_count = Trashy.Events.get_total_participant_cleanup_count(participant)
-        local_cleanup_count = Trashy.Events.get_local_participant_cleanup_count(participant, event)
-
-        promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
-        
         {:ok, assign(socket,
         participant_id: participant_id,
-        promotions: promotions,
+        promotions: Trashy.Promotions.list_event_participant_promotions(participant_id),
         participant: participant,
-        total_cleanup_count: total_cleanup_count,
-        local_cleanup_count: local_cleanup_count,
-        formatted_date: formatted_date,
-        current_user: nil)}
 
+        total_cleanup_count: Trashy.Events.get_total_participant_cleanup_count(participant),
+        local_cleanup_count: Trashy.Events.get_local_participant_cleanup_count(participant, event),
+        formatted_date: Calendar.strftime(event.time, "%m/%d/%Y"),
+        current_user: nil
+        )}
+      
       false ->
         raise TrashyWeb.CertificateLive.InvalidCodeError
     end
