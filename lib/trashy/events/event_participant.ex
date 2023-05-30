@@ -19,5 +19,6 @@ defmodule Trashy.Events.EventParticipant do
     |> cast(attrs, [:name, :last_name, :email, :event_id])
     |> validate_required([:name, :email, :event_id])
     |> put_change(:code, Ecto.UUID.generate())
+    |> unique_constraint(:name_email_event_id, name: :event_participants_name_email_event_id_index, message: "Expecting a unique name/email/event_id combination")
   end
 end

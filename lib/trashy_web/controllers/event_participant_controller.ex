@@ -86,9 +86,9 @@ defmodule TrashyWeb.EventParticipantController do
     end
   end
 
-  def get_event_participant(event, email) do
+  def get_event_participant(event, user) do
     query = from ep in EventParticipant,
-              where: ep.event_id == ^event.id and ep.email == ^email
+              where: ep.event_id == ^event.id and ep.email == ^user.email and ep.name == ^user.name
     Repo.one(query)
   end
 
@@ -97,7 +97,7 @@ defmodule TrashyWeb.EventParticipantController do
     %{"name" => name, "email" => email, "last_name" => last_name} = user
 
     # Check if event participant already exists
-    participant = case get_event_participant(event, email) do
+    participant = case get_event_participant(event, user) do
       nil ->
         {:ok, participant} = Events.create_event_participant(user)
         send_confirmation_email(conn, participant)
