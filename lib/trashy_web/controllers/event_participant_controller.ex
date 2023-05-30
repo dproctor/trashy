@@ -97,17 +97,14 @@ defmodule TrashyWeb.EventParticipantController do
     %{"name" => name, "email" => email, "last_name" => last_name} = user
 
     # Check if event participant already exists
-    participant = get_event_participant(event, email)
-
-    # If no participant exists, create one
-    if participant == nil do
-      {:ok, new_participant} = Events.create_event_participant(user)
-      send_confirmation_email(conn, new_participant)
-      Logger.info("cool new participant id: #{new_participant.id}")
-      participant = new_participant
-      Logger.info("cool participant id is now: #{participant.id}")
+    participant = case get_event_participant(event, email) do
+      nil ->
+        {:ok, participant} = Events.create_event_participant(user)
+        send_confirmation_email(conn, participant)
+        participant
+      participant ->
+        participant
     end
-    Logger.info("cool participant outside of the context is now: #{participant.id}")
 
     # Once the participant is known to exist, redirect
     redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}/#{participant.code}")
