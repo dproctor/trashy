@@ -21,7 +21,9 @@ Admin tasks:
 # TODO:
 - Import historic checkins from Google Sheets
 - social media capture
-- Follow-up email content
+- Report social media handles and list of emails which can be copy-pasted from event page
+- Update Follow-up email content
+- Switch send-from email to be somebody other than Devon
 
 # Phoenix Framework boilerplate
 

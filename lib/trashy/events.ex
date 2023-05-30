@@ -49,26 +49,23 @@ defmodule Trashy.Events do
       [%Event{}, ...]
 
   """
-  def list_cleanups_dates_for_participant(participant) do
-    query = from event_participant in EventParticipant,
-              where: event_participant.email == ^participant.email,
-              join: event in Event, on: event_participant.event_id == event.id
-    query = from [event_participant, event] in query,
-              select: %{time: event.time, cleanup_id: event.cleanup_id}
-    Repo.all(query)
-  end
 
   def get_total_participant_cleanup_count(participant) do
-    list_cleanups_dates_for_participant(participant)
-    |> Enum.count()
+    query = from event_participant in EventParticipant,
+              where: event_participant.email == ^participant.email,
+              join: event in Event, on: event_participant.event_id == event.id,
+              select: count(event_participant.id)
+    Repo.one(query)
   end
 
   def get_local_participant_cleanup_count(participant, event) do
-    list_cleanups_dates_for_participant(participant)
-    |> Enum.filter(fn record -> record.cleanup_id == event.cleanup_id end)
-    |> Enum.count()
+    query = from event_participant in EventParticipant,
+              where: event_participant.email == ^participant.email,
+              join: event in Event, on: event_participant.event_id == event.id,
+              where: event.cleanup_id == ^event.cleanup_id,
+              select: count(event_participant.id)
+    Repo.one(query)
   end
-
 
   @doc """
   Gets a single event.

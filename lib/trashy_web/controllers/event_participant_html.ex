@@ -2,7 +2,6 @@ defmodule TrashyWeb.EventParticipantHTML do
   use TrashyWeb, :html
 
   embed_templates "event_participant_html/*"
-  import Phoenix.HTML.Form
 
   @doc """
   Renders a event_participant form.
