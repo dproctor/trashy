@@ -16,20 +16,17 @@ Admin tasks:
 - 'Cleanups' are locations/neighborhoods where events are hosted regularly
 - 'Events' are specific dates for events
 - 'Registrations' are signups for email notifications, and may not actually show up to cleanups
-- 'Event Participants' are actual sign-ins at the end of an event.  These are uniquely keyed by name+email+event_id
+- 'Event Participants' are actual sign-ins at the end of an event.  These are uniquely keyed by first_name+email+event_id
 
 # TODO:
 - Import historic checkins from Google Sheets
-- social media capture
-- Report social media handles and list of emails which can be copy-pasted from event page
-- Update Follow-up email content
-- Switch send-from email to be somebody other than Devon
 
 # Phoenix Framework boilerplate
 
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
+  * Make sure that migrations are run by running `mix ecto.migrate`
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.

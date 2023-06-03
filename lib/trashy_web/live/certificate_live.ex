@@ -4,9 +4,9 @@ defmodule TrashyWeb.CertificateLive do
   def render(assigns) do
     ~H"""
       <.header class="text-center">
-      Thanks, <%= @participant.name %>!
+      Thanks, <%= @participant.first_name %>!
       <:subtitle>
-      <p><%= @participant.name %> <%= @participant.last_name %></p>
+      <p><%= @participant.first_name %> <%= @participant.last_name %></p>
       <p>Valid <%= @formatted_date %></p>
       <p>All-time cleanups: <%= @total_cleanup_count %></p>
       <p>Cleanups at this site: <%= @local_cleanup_count %></p>

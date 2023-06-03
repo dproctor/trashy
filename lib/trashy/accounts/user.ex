@@ -7,7 +7,7 @@ defmodule Trashy.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    field :name, :string
+    field :first_name, :string
     field :last_name, :string
     field :is_organizer, :boolean
 

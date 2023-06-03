@@ -8,7 +8,7 @@
 </.header>
 
 <.table id="registrations" rows={@registrations} row_click={&JS.navigate(~p"/registrations/#{&1}")}>
-  <:col :let={registration} label="Name"><%= registration.name %></:col>
+  <:col :let={registration} label="First Name"><%= registration.first_name %></:col>
   <:col :let={registration} label="Last Name"><%= registration.last_name %></:col>
   <:col :let={registration} label="Email"><%= registration.email %></:col>
   <:action :let={registration}>
