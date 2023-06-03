@@ -46,7 +46,9 @@ defmodule TrashyWeb.CertificateLive do
     case code == participant.code do
       true ->
         promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
-        {:ok, assign(socket, participant_id: participant_id, promotions: promotions)}
+
+        {:ok,
+         assign(socket, participant_id: participant_id, promotions: promotions, current_user: nil)}
 
       false ->
         raise TrashyWeb.CertificateLive.InvalidCodeError
