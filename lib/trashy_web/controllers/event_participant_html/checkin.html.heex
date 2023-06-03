@@ -3,7 +3,7 @@
   id="record_attendance_form"
   action={~p"/event_participants/checkin/#{@event.id}/#{@event.code}/record_attendance"}
   method="put">
-  <.input field={@form[:name]} type="text" placeholder="First Name" required />
+  <.input field={@form[:first_name]} type="text" placeholder="First Name" required />
   <.input field={@form[:last_name]} type="text" placeholder="Last Name (optional)" />
   <.input field={@form[:instagram]} type="text" placeholder="Instagram handle (optional)" />
   <.input field={@form[:email]} type="email" placeholder="Email" required />

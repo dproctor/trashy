@@ -52,19 +52,19 @@ defmodule Trashy.Events do
 
   def get_total_participant_cleanup_count(participant) do
     query = from event_participant in EventParticipant,
-              where: event_participant.email == ^participant.email,
+              where: event_participant.email == ^participant.email and event_participant.first_name == ^participant.first_name,
               join: event in Event, on: event_participant.event_id == event.id,
               select: count(event_participant.id)
-    Repo.one(query)
+    Repo.one!(query)
   end
 
   def get_local_participant_cleanup_count(participant, event) do
     query = from event_participant in EventParticipant,
-              where: event_participant.email == ^participant.email,
+              where: event_participant.email == ^participant.email and event_participant.first_name == ^participant.first_name,
               join: event in Event, on: event_participant.event_id == event.id,
               where: event.cleanup_id == ^event.cleanup_id,
               select: count(event_participant.id)
-    Repo.one(query)
+    Repo.one!(query)
   end
 
   @doc """

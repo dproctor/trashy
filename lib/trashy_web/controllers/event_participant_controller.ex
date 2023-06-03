@@ -87,7 +87,7 @@ defmodule TrashyWeb.EventParticipantController do
 
   def get_event_participant(event_id, user) do
     query = from ep in EventParticipant,
-              where: ep.event_id == ^event_id and ep.email == ^user["email"] and ep.name == ^user["name"]
+              where: ep.event_id == ^event_id and ep.email == ^user["email"] and ep.first_name == ^user["first_name"]
     Repo.one(query)
   end
 
@@ -108,14 +108,28 @@ defmodule TrashyWeb.EventParticipantController do
   end
 
   defp send_confirmation_email(conn, participant) do
-    text_body =
-      "Thanks for helping to clean up SF! You can access your rewards at #{TrashyWeb.Router.Helpers.live_url(conn, CertificateLive, participant.id, participant.code)}"
+    html_body = """
+    Thanks for helping clean up SF! You can access your rewards at #{TrashyWeb.Router.Helpers.live_url(conn, CertificateLive, participant.id, participant.code)}
+    <br><br>
+    Help us inspire more people to get involved and make the city a better place:  Please tag us in all all your amazing pictures and videos on our social media handles below:
+    <br>Instagram: <a href="https://www.instagram.com/clean_up_the_city_sf/">@Clean_up_the_City_sf</a>
+    <br>Twitter <a href="https://twitter.com/CivicJoyFund">@Civic_joy_fund</a>
+    <br>Facebook: <a href="https://www.facebook.com/CleanUpTheCitySF">@CleanUpTheCitySF</a>
+    <br><br>
+    #CivicJoy #CivicJoyFund #SanFranciscoComeback #revitalizeSanFrancisco
+    <br><br>
+    Check out more ways to get involved at CivicJoyFund.org, and thanks for being part of San Francisco's inspiring comeback story!
+    <br><br>
+    Til next time,
+    <br><br>
+    - Your trashy Clean Up crew
+    """
 
     Swoosh.Email.new()
-    |> Swoosh.Email.to({participant.name, participant.email})
-    |> Swoosh.Email.from({"TrashySF", "devon.proctor@gmail.com"})
+    |> Swoosh.Email.to({participant.first_name, participant.email})
+    |> Swoosh.Email.from({"Clean Up The City", "cutc-info@cleanupthecity.org"})
     |> Swoosh.Email.subject("Your trashy certificate")
-    |> Swoosh.Email.text_body(text_body)
+    |> Swoosh.Email.html_body(html_body)
     |> Trashy.Mailer.deliver()
   end
 end
