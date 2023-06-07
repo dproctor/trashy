@@ -1,16 +1,28 @@
-<.simple_form
-  for={@form}
-  id="record_attendance_form"
-  action={~p"/event_participants/checkin/#{@event.id}/#{@event.code}/record_attendance"}
-  method="put">
-  <.input field={@form[:first_name]} type="text" placeholder="First Name" required />
-  <.input field={@form[:last_name]} type="text" placeholder="Last Name (optional)" />
-  <.input field={@form[:instagram]} type="text" placeholder="Instagram handle (optional)" />
-  <.input field={@form[:email]} type="email" placeholder="Email" required />
-  <input id={@form[:event_id].id} name={@form[:event_id].name} type="number" value={@event.id} hidden />
-  <:actions>
-    <.button phx-disable-with="Sending..." class="w-full">
-      Record attendance
-    </.button>
-  </:actions>
-</.simple_form>
+<div class="hero min-h-screen bg-base-200">
+  <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="text-center lg:text-left">
+      <h1 class="text-5xl font-bold">🌁 Thanks! 🌇</h1>
+      <p class="py-6">Thanks for helping to clean up the city. Record your attendance to earn rewards.</p>
+    </div>
+    <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+      <div class="card-body">
+      <.simple_form
+        for={@form}
+        id="record_attendance_form"
+        action={~p"/event_participants/checkin/#{@event.id}/#{@event.code}/record_attendance"}
+        method="put">
+        <.input field={@form[:first_name]} type="text" placeholder="First Name" required />
+        <.input field={@form[:last_name]} type="text" placeholder="Last Name (optional)" />
+        <.input field={@form[:instagram]} type="text" placeholder="Instagram handle (optional)" />
+        <.input field={@form[:email]} type="email" placeholder="Email" required />
+        <input id={@form[:event_id].id} name={@form[:event_id].name} type="number" value={@event.id} hidden />
+        <:actions>
+          <.button phx-disable-with="Sending..." class="w-full">
+            Record attendance
+          </.button>
+        </:actions>
+      </.simple_form>
+      </div>
+    </div>
+  </div>
+</div>

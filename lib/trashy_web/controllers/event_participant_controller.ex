@@ -74,7 +74,11 @@ defmodule TrashyWeb.EventParticipantController do
 
     case code == event.code do
       true ->
-        render(conn, :checkin, event: event, form: Phoenix.HTML.FormData.to_form(%{}, as: "user"))
+        render(conn, :checkin,
+          event: event,
+          form: Phoenix.HTML.FormData.to_form(%{}, as: "user"),
+          layout: false
+        )
 
       false ->
         conn
@@ -86,25 +90,30 @@ defmodule TrashyWeb.EventParticipantController do
   end
 
   def get_event_participant(event_id, user) do
-    query = from ep in EventParticipant,
-              where: ep.event_id == ^event_id and ep.email == ^user["email"] and ep.first_name == ^user["first_name"]
+    query =
+      from ep in EventParticipant,
+        where:
+          ep.event_id == ^event_id and ep.email == ^user["email"] and
+            ep.first_name == ^user["first_name"]
+
     Repo.one(query)
   end
 
   def record_attendance(conn, %{"event_id" => event_id, "user" => user}) do
     # Check if event participant already exists
-    participant = case get_event_participant(event_id, user) do
-      nil ->
-        {:ok, participant} = Events.create_event_participant(user)
-        send_confirmation_email(conn, participant)
-        participant
-      participant ->
-        participant
-    end
+    participant =
+      case get_event_participant(event_id, user) do
+        nil ->
+          {:ok, participant} = Events.create_event_participant(user)
+          send_confirmation_email(conn, participant)
+          participant
+
+        participant ->
+          participant
+      end
 
     # Once the participant is known to exist, redirect
     redirect(conn, to: ~p"/event_participants/certificate/#{participant.id}/#{participant.code}")
-
   end
 
   defp send_confirmation_email(conn, participant) do
