@@ -16,7 +16,9 @@ defmodule TrashyWeb.CertificateLive do
           <div class="card-body">
             <div class="text-center lg:text-left">
               <h2 class="text-xl font-bold">Certificate</h2>
-              <h3 class="text-md">Claim your rewards</h3>
+              <h3 class="text-md">
+                Here are the gift certificates for the Weekly trash pick up. Please show this screen to the business owner and check off your one time use certificate in the app at the location.
+              </h3>
             </div>
             <table class="table-fixed">
               <thead>
