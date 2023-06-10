@@ -15,9 +15,9 @@ defmodule TrashyWeb.CertificateLive do
         <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <div class="card-body">
             <div class="text-center lg:text-left">
-              <h2 class="text-xl font-bold">Certificate</h2>
+              <h2 class="text-xl font-bold">Trash Pickup Certificate</h2>
               <h3 class="text-md">
-                Here are the gift certificates for the Weekly trash pick up. Please show this screen to the business owner and check off your one time use certificate in the app at the location.
+                Here are the gift certificates for the weekly trash pick up. Please show this screen to the business owner and check off your one time use certificate in the app at the location.
               </h3>
             </div>
             <table class="table-fixed">
@@ -31,9 +31,9 @@ defmodule TrashyWeb.CertificateLive do
               <tbody>
                 <%= for promotion <- @promotions do %>
                   <tr>
-                    <td class="px-1"><%= promotion.promotion.merchant %></td>
-                    <td class="px-1"><%= promotion.promotion.details %></td>
-                    <td class="px-1">
+                    <td style="border:1px solid #333333" class="px-1"><%= promotion.promotion.merchant %></td>
+                    <td style="border:1px solid #333333" class="px-1"><%= promotion.promotion.details %></td>
+                    <td style="border:1px solid #333333" class="px-1">
                       <.input
                         field={promotion.is_claimed}
                         value={promotion.is_claimed}
