@@ -31,9 +31,9 @@ defmodule TrashyWeb.CertificateLive do
               <tbody>
                 <%= for promotion <- @promotions do %>
                   <tr>
-                    <td style="border:1px solid #333333" class="px-1"><%= promotion.promotion.merchant %></td>
-                    <td style="border:1px solid #333333" class="px-1"><%= promotion.promotion.details %></td>
-                    <td style="border:1px solid #333333" class="px-1">
+                    <td class="px-1 border"><%= promotion.promotion.merchant %></td>
+                    <td class="px-1 border"><%= promotion.promotion.details %></td>
+                    <td class="px-1 border">
                       <.input
                         field={promotion.is_claimed}
                         value={promotion.is_claimed}
