@@ -118,7 +118,7 @@ defmodule TrashyWeb.EventParticipantController do
 
   defp send_confirmation_email(conn, participant) do
     html_body = """
-    Thanks for helping clean up SF! You can access your rewards at #{TrashyWeb.Router.Helpers.live_url(conn, CertificateLive, participant.id, participant.code)}
+    Thanks for helping clean up SF! You can access your rewards <a href="#{TrashyWeb.Router.Helpers.live_url(conn, CertificateLive, participant.id, participant.code)}">here</a>.
     <br><br>
     Help us inspire more people to get involved and make the city a better place:  Please tag us in all all your amazing pictures and videos on our social media handles below:
     <br>Instagram: <a href="https://www.instagram.com/clean_up_the_city_sf/">@Clean_up_the_City_sf</a>
