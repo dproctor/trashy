@@ -209,6 +209,7 @@ defmodule Trashy.Promotions do
     cleanup = Trashy.Cleanups.get_cleanup_with_preloads(event.cleanup_id)
 
     cleanup.promotions
+    |> Enum.filter(&(!&1.is_disabled))
     |> Enum.map(fn promo ->
       %EventParticipantPromotion{}
       |> EventParticipantPromotion.changeset(%{

@@ -17,9 +17,4 @@
     </div>
     <.link navigate={~p"/organizer/promotions/#{promotion}/edit"}>Edit</.link>
   </:action>
-  <:action :let={promotion}>
-    <.link href={~p"/organizer/promotions/#{promotion}"} method="delete" data-confirm="Are you sure?">
-      Delete
-    </.link>
-  </:action>
 </.table>

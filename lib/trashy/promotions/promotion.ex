@@ -6,6 +6,7 @@ defmodule Trashy.Promotions.Promotion do
     field(:details, :string)
     field(:merchant, :string)
     belongs_to(:cleanup, Trashy.Cleanups.Cleanup)
+    field(:is_disabled, :boolean)
 
     timestamps()
   end
@@ -13,7 +14,7 @@ defmodule Trashy.Promotions.Promotion do
   @doc false
   def changeset(promotion, attrs) do
     promotion
-    |> cast(attrs, [:merchant, :details, :cleanup_id])
+    |> cast(attrs, [:merchant, :details, :cleanup_id, :is_disabled])
     |> validate_required([:merchant, :details, :cleanup_id])
   end
 end

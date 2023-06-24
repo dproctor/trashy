@@ -11,7 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= for promo <- @cleanup.promotions do %>
+        <%= for promo <- @cleanup.promotions |> Enum.filter(&(!&1.is_disabled)) do %>
           <tr>
             <td><%= promo.merchant %></td>
             <td><%= promo.details %></td>
