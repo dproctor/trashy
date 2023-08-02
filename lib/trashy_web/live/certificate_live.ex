@@ -3,58 +3,42 @@ defmodule TrashyWeb.CertificateLive do
 
   def render(assigns) do
     ~H"""
-    <div class="hero min-h-screen bg-base-200">
-      <div class="hero-content flex-col lg:flex-row-reverse">
+    <div class="min-h-screen bg-gradient-to-bl from-[#3B2F64] to-[#2C293F]">
+      <div class="flex-col lg:flex-row-reverse">
+        <p class="p-4 text-white text-right">
+          <%= @participant.first_name %> <%= @participant.last_name %>
+        </p>
         <div class="text-center lg:text-left">
-          <h1 class="text-3xl font-bold">🌁 Thanks, <%= @participant.first_name %>! 🌇</h1>
-          <p><%= @participant.first_name %> <%= @participant.last_name %></p>
-          <p>Valid <%= @formatted_date %></p>
-          <p>All-time cleanups: <%= @total_cleanup_count %></p>
-          <p>Cleanups at this site: <%= @local_cleanup_count %></p>
+          <h1 class="text-5xl font-bold text-white mt-16 m-6">Today's Perks</h1>
+          <h2 class="text-lg font-bold text-white m-6"><%= @formatted_date %></h2>
+          <p class="text-md text-white m-6">
+            Here’s what’s good in the neighborhood! Redeem each reward by showing this screen to our participating partners. Valid for today only.
+          </p>
         </div>
-        <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <div class="card-body">
-            <div class="text-center lg:text-left">
-              <h2 class="text-xl font-bold">Trash Pickup Certificate</h2>
-              <h3 class="text-md">
-                Here are the gift certificates for the weekly trash pick up. Please show this screen to the business owner and check off your one time use certificate in the app at the location.
-              </h3>
+        <div class="flex flex-col space-y-4 m-8">
+          <%= for promotion <- @promotions do %>
+            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 " <> if promotion.is_claimed do "opacity-25" else "" end}>
+              <h1 class="basis-1/6 text-3xl">
+                <%= promotion.promotion.icon %>
+              </h1>
+              <div class="basis-2/3">
+                <h3 class="text-white">
+                  <%= promotion.promotion.merchant %>
+                </h3>
+                <h4 class="text-xs text-white">
+                  <%= promotion.promotion.details %>
+                </h4>
+              </div>
+              <button
+                class="btn basis-1/6 bg-white text-[#362D58]"
+                disabled={promotion.is_claimed}
+                phx-click="claim_reward"
+                phx-value-promotion_id={promotion.id}
+              >
+                Redeem
+              </button>
             </div>
-            <table class="table-fixed">
-              <thead>
-                <tr>
-                  <th>Merchant</th>
-                  <th>Details</th>
-                  <th>Claimed</th>
-                </tr>
-              </thead>
-              <tbody>
-                <%= for promotion <- @promotions do %>
-                  <tr>
-                    <td class="px-1 border border-1 border-gray-600">
-                      <%= promotion.promotion.merchant %>
-                    </td>
-                    <td class="px-1 border border-1 border-gray-600">
-                      <%= promotion.promotion.details %>
-                    </td>
-                    <td class="px-1 border border-1 border-gray-600">
-                      <.input
-                        field={promotion.is_claimed}
-                        value={promotion.is_claimed}
-                        name="promotion"
-                        type="checkbox"
-                        phx-click="claim_reward"
-                        phx-value-promotion_id={promotion.id}
-                        disabled={promotion.is_claimed}
-                        phx-disconnected={JS.set_attribute({"readonly", true})}
-                        phx-connected={JS.remove_attribute("readonly")}
-                      />
-                    </td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
+          <% end %>
         </div>
       </div>
     </div>
@@ -76,7 +60,7 @@ defmodule TrashyWeb.CertificateLive do
            total_cleanup_count: Trashy.Events.get_total_participant_cleanup_count(participant),
            local_cleanup_count:
              Trashy.Events.get_local_participant_cleanup_count(participant, event),
-           formatted_date: Calendar.strftime(event.time, "%m/%d/%Y"),
+           formatted_date: Calendar.strftime(event.time, "%B %-d, %Y"),
            current_user: nil
          ), layout: false}
 
@@ -87,7 +71,7 @@ defmodule TrashyWeb.CertificateLive do
 
   def handle_event(
         "claim_reward",
-        %{"promotion-id" => promotion_id},
+        %{"promotion_id" => promotion_id},
         %{assigns: %{participant_id: participant_id}} = socket
       ) do
     promotion = Trashy.Promotions.get_event_participant_promotion!(promotion_id)
