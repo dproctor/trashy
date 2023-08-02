@@ -1,17 +1,19 @@
-<div class="hero min-h-screen bg-base-200">
+<div class="hero min-h-screen bg-gradient-to-bl from-[#3B2F64] to-[#2C293F]">
   <div class="hero-content flex-col lg:flex-row-reverse">
     <div class="text-center lg:text-left">
-      <h1 class="text-5xl font-bold">🌁 Thanks! 🌇</h1>
-      <p class="py-6">Thanks for helping to clean up the city! Record your attendance to earn rewards. We would be so grateful if you added  & tagged us with your photos via Instagram <b> @Civic_joy_fund_sf </b> and <b> @clean_up_the_city_sf </b>.</p>
+      <h1 class="text-5xl font-bold text-white"> Thanks for cleaning up our city! </h1>
+      <img class="mx-auto mt-8 mb-2" src="/images/safety-vest.png" alt="Safety vest">
+      <p class="py-6 text-white">The sidewalks look fantastic. Now record your attendance to claim rewards from local businesses.</p>
     </div>
-    <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-      <div class="card-body">
+    <div class="card flex-shrink-0 max-w-sm">
+      <div class="card-body py-0">
       <.simple_form
         for={@form}
         id="record_attendance_form"
         action={~p"/event_participants/checkin/#{@event.id}/#{@event.code}/record_attendance"}
-        method="put">
-        <.input field={@form[:first_name]} type="text" placeholder="First Name" required />
+        method="put"
+        class="mt-0">
+        <.input field={@form[:first_name]} type="text" placeholder="First Name" required class="bg-black"/>
         <.input field={@form[:last_name]} type="text" placeholder="Last Name (optional)" />
         <.input field={@form[:email]} type="email" placeholder="Email" required />
         <.input field={@form[:instagram]} type="text" placeholder="Instagram handle (optional)" />
@@ -19,8 +21,8 @@
         <.input field={@form[:num_bags_collected]} type="number" value="1" label="Number of bags collected"/>
         <input id={@form[:event_id].id} name={@form[:event_id].name} type="number" value={@event.id} hidden />
         <:actions>
-          <.button phx-disable-with="Sending..." class="w-full">
-            Record attendance
+          <.button phx-disable-with="Sending..." class="text-[#234A45] bg-[#60CABC] mx-auto px-6 ">
+            Submit
           </.button>
         </:actions>
       </.simple_form>
