@@ -59,7 +59,9 @@ defmodule TrashyWeb.CertificateLive do
         {:ok,
          assign(socket,
            participant_id: participant_id,
-           promotions: Trashy.Promotions.list_event_participant_promotions(participant_id),
+           promotions:
+             Trashy.Promotions.list_event_participant_promotions(participant_id)
+             |> Enum.sort_by(fn p -> p.promotion.merchant end),
            participant: participant,
            total_cleanup_count: Trashy.Events.get_total_participant_cleanup_count(participant),
            local_cleanup_count:
