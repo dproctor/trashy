@@ -44,6 +44,18 @@ defmodule TrashyWeb.CertificateLive do
             </div>
           <% end %>
         </div>
+        <div class="text-center lg:text-left">
+          <h2 class="text-3xl text-white font-bold mb-6">Your Stats</h2>
+
+          <div class="mb-4">
+            <h3 class="text-white text-md">Total cleanups completed</h3>
+            <p class="text-white text-2xl font-bold"><%= @total_cleanup_count %></p>
+          </div>
+          <div>
+            <h3 class="text-white text-md">Completed at this site</h3>
+            <p class="text-white text-2xl font-bold"><%= @local_cleanup_count %></p>
+          </div>
+        </div>
       </div>
     </div>
     """
