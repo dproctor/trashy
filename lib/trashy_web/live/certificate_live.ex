@@ -30,7 +30,7 @@ defmodule TrashyWeb.CertificateLive do
                 </h4>
               </div>
               <button
-                class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white rounded"
+                class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white rounded normal-case"
                 disabled={promotion.is_claimed}
                 phx-click="claim_reward"
                 phx-value-promotion_id={promotion.id}
