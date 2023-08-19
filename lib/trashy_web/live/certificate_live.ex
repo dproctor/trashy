@@ -17,7 +17,7 @@ defmodule TrashyWeb.CertificateLive do
         </div>
         <div class="flex flex-col space-y-4 m-8">
           <%= for promotion <- @promotions do %>
-            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 " <> if promotion.is_claimed do "opacity-25" else "" end}>
+            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 rounded " <> if promotion.is_claimed do "opacity-25" else "" end}>
               <h1 class="basis-1/6 text-3xl">
                 <%= promotion.promotion.icon %>
               </h1>
@@ -30,7 +30,7 @@ defmodule TrashyWeb.CertificateLive do
                 </h4>
               </div>
               <button
-                class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white"
+                class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white rounded"
                 disabled={promotion.is_claimed}
                 phx-click="claim_reward"
                 phx-value-promotion_id={promotion.id}
