@@ -158,6 +158,7 @@ defmodule Trashy.Promotions do
         preload: [:promotion]
       )
     )
+    |> Enum.sort_by(fn p -> p.promotion.merchant end)
   end
 
   @doc """

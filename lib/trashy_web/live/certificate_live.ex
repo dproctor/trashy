@@ -51,7 +51,7 @@ defmodule TrashyWeb.CertificateLive do
             <h3 class="text-white text-md">Total cleanups completed</h3>
             <p class="text-white text-2xl font-bold"><%= @total_cleanup_count %></p>
           </div>
-          <div>
+          <div class="pb-4">
             <h3 class="text-white text-md">Completed at this site</h3>
             <p class="text-white text-2xl font-bold"><%= @local_cleanup_count %></p>
           </div>
@@ -71,9 +71,7 @@ defmodule TrashyWeb.CertificateLive do
         {:ok,
          assign(socket,
            participant_id: participant_id,
-           promotions:
-             Trashy.Promotions.list_event_participant_promotions(participant_id)
-             |> Enum.sort_by(fn p -> p.promotion.merchant end),
+           promotions: Trashy.Promotions.list_event_participant_promotions(participant_id),
            participant: participant,
            total_cleanup_count: Trashy.Events.get_total_participant_cleanup_count(participant),
            local_cleanup_count:
