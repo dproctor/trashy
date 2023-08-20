@@ -17,7 +17,7 @@ defmodule TrashyWeb.CertificateLive do
         </div>
         <div class="flex flex-col space-y-4 m-8">
           <%= for promotion <- @promotions do %>
-            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 " <> if promotion.is_claimed do "opacity-25" else "" end}>
+            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 rounded " <> if promotion.is_claimed do "opacity-25" else "" end}>
               <h1 class="basis-1/6 text-3xl">
                 <%= promotion.promotion.icon %>
               </h1>
@@ -30,15 +30,31 @@ defmodule TrashyWeb.CertificateLive do
                 </h4>
               </div>
               <button
-                class="btn basis-1/6 bg-white text-[#362D58]"
+                class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white rounded normal-case border-none"
                 disabled={promotion.is_claimed}
                 phx-click="claim_reward"
                 phx-value-promotion_id={promotion.id}
               >
-                Redeem
+                <%= if promotion.is_claimed do %>
+                  Redeemed
+                <% else %>
+                  Redeem
+                <% end %>
               </button>
             </div>
           <% end %>
+        </div>
+        <div class="text-center lg:text-left">
+          <h2 class="text-3xl text-white font-bold mb-6">Your Stats</h2>
+
+          <div class="mb-4">
+            <h3 class="text-white text-md">Total cleanups completed</h3>
+            <p class="text-white text-2xl font-bold"><%= @total_cleanup_count %></p>
+          </div>
+          <div>
+            <h3 class="text-white text-md">Completed at this site</h3>
+            <p class="text-white text-2xl font-bold"><%= @local_cleanup_count %></p>
+          </div>
         </div>
       </div>
     </div>
@@ -55,7 +71,9 @@ defmodule TrashyWeb.CertificateLive do
         {:ok,
          assign(socket,
            participant_id: participant_id,
-           promotions: Trashy.Promotions.list_event_participant_promotions(participant_id),
+           promotions:
+             Trashy.Promotions.list_event_participant_promotions(participant_id)
+             |> Enum.sort_by(fn p -> p.promotion.merchant end),
            participant: participant,
            total_cleanup_count: Trashy.Events.get_total_participant_cleanup_count(participant),
            local_cleanup_count:
