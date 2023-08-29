@@ -29,17 +29,15 @@ defmodule TrashyWeb.CertificateLive do
                   <%= promotion.promotion.details %>
                 </h4>
               </div>
-              <label
-                class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white rounded normal-case border-none"
-                disabled={promotion.is_claimed}
-                for={"claim_reward_modal_#{promotion.id}"}
-              >
-                <%= if promotion.is_claimed do %>
-                  Redeemed
-                <% else %>
+              <%= if promotion.is_claimed do %>
+              <% else %>
+                <label
+                  class={"btn basis-1/6 bg-white text-[#362D58] rounded normal-case border-none "<> if promotion.is_claimed do "text-white" else "" end}
+                  for={"claim_reward_modal_#{promotion.id}"}
+                >
                   Redeem
-                <% end %>
-              </label>
+                </label>
+              <% end %>
             </div>
             <input type="checkbox" id={"claim_reward_modal_#{promotion.id}"} class="modal-toggle" />
             <div class="modal">
