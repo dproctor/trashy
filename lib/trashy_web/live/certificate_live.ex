@@ -29,18 +29,56 @@ defmodule TrashyWeb.CertificateLive do
                   <%= promotion.promotion.details %>
                 </h4>
               </div>
-              <button
+              <label
                 class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white rounded normal-case border-none"
                 disabled={promotion.is_claimed}
-                phx-click="claim_reward"
-                phx-value-promotion_id={promotion.id}
+                for={"claim_reward_modal_#{promotion.id}"}
               >
                 <%= if promotion.is_claimed do %>
                   Redeemed
                 <% else %>
                   Redeem
                 <% end %>
-              </button>
+              </label>
+            </div>
+            <input type="checkbox" id={"claim_reward_modal_#{promotion.id}"} class="modal-toggle" />
+            <div class="modal">
+              <div class="modal-box">
+                <div class="flex flex-col">
+                  <div class="m-auto py-4">
+                    <p class="text-[#362D58]">Show this to the merchant.</p>
+                  </div>
+                  <div class="flex flex-row items-center bg-[#362D58] space-x-2 p-4 rounded" }>
+                    <h1 class="basis-1/6 text-3xl p-2 rounded">
+                      <%= promotion.promotion.icon %>
+                    </h1>
+                    <div class="basis-2/3">
+                      <h3 class="text-white">
+                        <%= promotion.promotion.merchant %>
+                      </h3>
+                      <h4 class="text-xs text-white">
+                        <%= promotion.promotion.details %>
+                      </h4>
+                    </div>
+                  </div>
+                  <div class="flex flex-row justify-between py-6">
+                    <label
+                      class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white rounded normal-case border-[#362D58]"
+                      for={"claim_reward_modal_#{promotion.id}"}
+                    >
+                      Cancel
+                    </label>
+                    <label
+                      class="btn basis-1/6 text-white bg-[#362D58] disabled:text-white rounded normal-case border-none"
+                      for={"claim_reward_modal_#{promotion.id}"}
+                      phx-click="claim_reward"
+                      phx-value-promotion_id={promotion.id}
+                    >
+                      Redeem
+                    </label>
+                  </div>
+                </div>
+              </div>
             </div>
           <% end %>
         </div>
