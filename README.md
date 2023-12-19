@@ -19,7 +19,6 @@ Admin tasks:
 - 'Event Participants' are actual sign-ins at the end of an event.  These are uniquely keyed by first_name+email+event_id
 
 # TODO:
-- Import historic checkins from Google Sheets
 
 # Phoenix Framework boilerplate
 
