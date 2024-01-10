@@ -12,6 +12,7 @@
   <:item title="Time"><%= Calendar.strftime(@event.time, "%m/%d/%Y %I:%M %p") %></:item>
   <:item title="Poster"> <a href={~p"/organizer/events/poster/#{@event}"}>Link</a> </:item>
   <:item title="Certificate"> <a href={~p"/organizer/events/certificate/#{@event}"}>Link</a></:item>
+  <:item title="Participant count"> <%= length(@event_participants) %></:item>
 </.list>
 
 <.header class="mt-10">
@@ -40,9 +41,6 @@
     </.link>
   </:action>
 </.table>
-
-<br>
-<p> <b>Total participant count:</b> <%= length(@event_participants) %></p>
 
 <.header class="mt-10">
   Participant Emails
