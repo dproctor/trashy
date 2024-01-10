@@ -19,7 +19,10 @@ defmodule Trashy.Events do
 
   """
   def list_events do
-    Repo.all(Event)
+    Repo.all(
+      from event in Event,
+        order_by: [desc: event.time]
+    )
     |> Repo.preload(:cleanup)
   end
 
@@ -36,7 +39,8 @@ defmodule Trashy.Events do
     Repo.all(
       from event in Event,
         where: event.cleanup_id == ^cleanup.id,
-        distinct: true
+        distinct: true,
+        order_by: [desc: event.time]
     )
   end
 
