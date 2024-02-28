@@ -13,6 +13,7 @@
   <:item title="Poster"> <a href={~p"/organizer/events/poster/#{@event}"}>Link</a> </:item>
   <:item title="Certificate"> <a href={~p"/organizer/events/certificate/#{@event}"}>Link</a></:item>
   <:item title="Participant count"> <%= length(@event_participants) %></:item>
+  <:item title="Bag count"> <%= @event_participants |> Enum.map(fn p -> p.num_bags_collected || 0 end) |> Enum.sum() %></:item>
 </.list>
 
 <.header class="mt-10">
