@@ -32,6 +32,8 @@ defmodule TrashyWeb.Router do
     live("/event_participants/certificate/:participant_id/:code", CertificateLive)
 
     post "/registrations", RegistrationController, :create
+
+    get("/not_authorized", PageController, :organizer_not_authorized)
   end
 
   scope "/organizer", TrashyWeb do
