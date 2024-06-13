@@ -203,7 +203,7 @@ defmodule TrashyWeb.UserAuth do
       conn
       |> put_flash(:error, "You do not have permission to view this page.")
       |> maybe_store_return_to()
-      |> redirect(to: ~p"/")
+      |> redirect(to: ~p"/not_authorized")
       |> halt()
     end
   end
