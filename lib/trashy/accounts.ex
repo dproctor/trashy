@@ -8,6 +8,20 @@ defmodule Trashy.Accounts do
 
   alias Trashy.Accounts.{User, UserToken, UserNotifier}
 
+  @doc """
+  Returns the list of users.
+
+  ## Examples
+
+      iex> list_users()
+      [%User{}, ...]
+
+  """
+  def list_users do
+    Repo.all(User)
+    |> Repo.preload(:cleanups)
+  end
+
   ## Database getters
 
   @doc """
@@ -58,7 +72,7 @@ defmodule Trashy.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id), do: Repo.get!(User, id) |> Repo.preload(:cleanups)
 
   ## User registration
 
@@ -349,5 +363,36 @@ defmodule Trashy.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking user changes.
+
+  ## Examples
+
+      iex> change_user(user)
+      %Ecto.Changeset{data: %User{}}
+
+  """
+  def change_user(%User{} = user, attrs \\ %{}) do
+    User.admin_properties_changeset(user, attrs)
+  end
+
+  @doc """
+  Updates a user..
+
+  ## Examples
+
+      iex> update_user(user, %{field: new_value})
+      {:ok, %User{}}
+
+      iex> update_user(user, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_user(%User{} = user, attrs) do
+    user
+    |> User.admin_properties_changeset(attrs)
+    |> Repo.update()
   end
 end
