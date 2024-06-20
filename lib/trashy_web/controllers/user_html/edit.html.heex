@@ -1,0 +1,13 @@
+<.header>
+  Edit User <%= @user.id %>
+</.header>
+
+<ul>
+  <li> First name: <%= @user.first_name %> </li>
+  <li> Last name: <%= @user.last_name %> </li>
+  <li> Email: <%= @user.email %> </li>
+</ul>
+
+<.user_form changeset={@changeset} action={~p"/admin/users/#{@user}"} />
+
+<.back navigate={~p"/admin/users"}>Back to users</.back>

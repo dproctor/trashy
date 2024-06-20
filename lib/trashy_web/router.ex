@@ -54,6 +54,12 @@ defmodule TrashyWeb.Router do
     get("/cleanups/:cleanup_id/events", CleanupController, :events)
   end
 
+  scope "/admin", TrashyWeb do
+    pipe_through([:browser, :require_authenticated_user, :require_admin])
+
+    resources "/users", UserController
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", TrashyWeb do
   #   pipe_through :api

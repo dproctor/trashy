@@ -10,9 +10,11 @@ defmodule Trashy.Accounts.User do
     field :first_name, :string
     field :last_name, :string
     field :is_organizer, :boolean
+    field :is_admin, :boolean
 
     many_to_many :cleanups, Trashy.Cleanups.Cleanup,
-      join_through: Trashy.Cleanups.CleanupOrganizer
+      join_through: Trashy.Cleanups.CleanupOrganizer,
+      join_keys: [organizer_id: :id, cleanup_id: :id]
 
     timestamps()
   end
@@ -160,5 +162,14 @@ defmodule Trashy.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  @doc """
+  A user changeset for changing the admin-configured user properties.
+
+  """
+  def admin_properties_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:is_organizer])
   end
 end

@@ -1,0 +1,18 @@
+<.header>
+  User <%= @user.id %>
+  <:subtitle>This is a user record from your database.</:subtitle>
+  <:actions>
+    <.link href={~p"/admin/users/#{@user}/edit"}>
+      <.button>Edit user</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="First Name"><%= @user.first_name %></:item>
+  <:item title="Last Name"><%= @user.last_name %></:item>
+  <:item title="Email"><%= @user.email %></:item>
+  <:item title="Cleanups"><%= @user.cleanups |> Enum.map(fn cleanup -> cleanup.location end) %></:item>
+</.list>
+
+<.back navigate={~p"/admin/users"}>Back to users</.back>
