@@ -18,7 +18,10 @@ defmodule Trashy.Accounts do
 
   """
   def list_users do
-    Repo.all(User)
+    Repo.all(
+      from user in User,
+        order_by: [asc: user.id]
+    )
     |> Repo.preload(:cleanups)
   end
 
