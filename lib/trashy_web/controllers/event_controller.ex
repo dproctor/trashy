@@ -32,7 +32,14 @@ defmodule TrashyWeb.EventController do
     event = Events.get_event!(id)
     cleanup = Trashy.Cleanups.get_cleanup_with_preloads(event.cleanup_id)
     participants = Trashy.Events.list_event_participants_for_event(event)
-    render(conn, :show, event: event, cleanup: cleanup, event_participants: participants)
+    event_checkin_url = url(conn, ~p"/event_participants/checkin/#{id}/#{event.code}")
+
+    render(conn, :show,
+      event: event,
+      cleanup: cleanup,
+      event_participants: participants,
+      event_checkin_url: event_checkin_url
+    )
   end
 
   def edit(conn, %{"id" => id}) do
