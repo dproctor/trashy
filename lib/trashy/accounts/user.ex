@@ -170,6 +170,6 @@ defmodule Trashy.Accounts.User do
   """
   def admin_properties_changeset(user, attrs) do
     user
-    |> cast(attrs, [:is_organizer])
+    |> cast(attrs, [:is_organizer, :is_admin, :cleanups])
   end
 end
