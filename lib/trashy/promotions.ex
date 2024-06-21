@@ -218,7 +218,6 @@ defmodule Trashy.Promotions do
         promotion_id: promo.id
       })
     end)
-    |> IO.inspect()
     |> Enum.each(&Repo.insert/1)
 
     :ok

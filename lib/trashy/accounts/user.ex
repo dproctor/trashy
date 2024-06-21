@@ -14,7 +14,8 @@ defmodule Trashy.Accounts.User do
 
     many_to_many :cleanups, Trashy.Cleanups.Cleanup,
       join_through: Trashy.Cleanups.CleanupOrganizer,
-      join_keys: [organizer_id: :id, cleanup_id: :id]
+      join_keys: [organizer_id: :id, cleanup_id: :id],
+      on_replace: :delete
 
     timestamps()
   end
@@ -170,6 +171,6 @@ defmodule Trashy.Accounts.User do
   """
   def admin_properties_changeset(user, attrs) do
     user
-    |> cast(attrs, [:is_organizer])
+    |> cast(attrs, [:is_organizer, :is_admin])
   end
 end

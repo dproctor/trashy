@@ -8,6 +8,6 @@
   <li> Email: <%= @user.email %> </li>
 </ul>
 
-<.user_form changeset={@changeset} action={~p"/admin/users/#{@user}"} />
+<.user_form changeset={@changeset} all_cleanups={@all_cleanups} action={~p"/admin/users/#{@user}"} />
 
 <.back navigate={~p"/admin/users"}>Back to users</.back>
