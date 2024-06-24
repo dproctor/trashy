@@ -8,6 +8,7 @@ defmodule Trashy.Events do
 
   alias Trashy.Events.Event
   alias Trashy.Events.EventParticipant
+  alias Trashy.Cleanups.Cleanup
 
   @doc """
   Returns the list of events.
@@ -136,6 +137,50 @@ defmodule Trashy.Events do
     %Event{}
     |> Event.changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Creates new recurring events for appropriately configured cleanups.
+
+  ## Examples
+
+      iex> create_new_recurring_events(%{field: value})
+      [%Event{}, ...]
+
+  """
+  def create_new_recurring_events(weeks_ahead) do
+    Repo.all(
+      from cleanup in Cleanup,
+        where: cleanup.enable_recurring_events and not is_nil(cleanup.regular_datetime)
+    )
+    |> Enum.flat_map(fn cleanup ->
+      # get datetime of next instance
+
+      next_event_time =
+        Timex.today()
+        |> Timex.shift(days: 7)
+        |> Timex.beginning_of_week()
+        |> Timex.shift(days: Date.day_of_week(cleanup.regular_datetime) - 1)
+        |> NaiveDateTime.new!(NaiveDateTime.to_time(cleanup.regular_datetime))
+
+      0..(weeks_ahead - 1)
+      |> Enum.map(fn n ->
+        case get_matching_events(cleanup.id, next_event_time, 24) do
+          [] ->
+            create_event(%{
+              cleanup_id: cleanup.id,
+              time: NaiveDateTime.add(next_event_time, 7 * n, :day)
+            })
+
+          _ ->
+            IO.puts(
+              "create_new_recurring_events: Not creating recurring event #{cleanup.id} #{next_event_time}, event already exists"
+            )
+
+            nil
+        end
+      end)
+    end)
   end
 
   @doc """

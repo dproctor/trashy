@@ -4,6 +4,8 @@
   </.error>
   <.input field={f[:neighborhood]} type="text" label="Neighborhood" />
   <.input field={f[:location]} type="text" label="Location" />
+  <.input field={f[:regular_datetime]} type="datetime-local" label="Regular time and day of week" />
+  <.input field={f[:enable_recurring_events]} type="checkbox" label="Enable repeating events" />
   <:actions>
     <.button>Save Cleanup</.button>
   </:actions>

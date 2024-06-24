@@ -7,6 +7,8 @@ defmodule Trashy.Cleanups.Cleanup do
     field :neighborhood, :string
     many_to_many :organizers, Trashy.Accounts.User, join_through: Trashy.Cleanups.CleanupOrganizer
     has_many :promotions, Trashy.Promotions.Promotion
+    field :regular_datetime, :naive_datetime
+    field :enable_recurring_events, :boolean
 
     timestamps()
   end
@@ -14,7 +16,7 @@ defmodule Trashy.Cleanups.Cleanup do
   @doc false
   def changeset(cleanup, attrs) do
     cleanup
-    |> cast(attrs, [:neighborhood, :location])
+    |> cast(attrs, [:neighborhood, :location, :regular_datetime, :enable_recurring_events])
     |> validate_required([:neighborhood, :location])
   end
 end
