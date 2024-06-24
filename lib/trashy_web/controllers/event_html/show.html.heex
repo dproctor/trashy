@@ -12,6 +12,8 @@
   <:item title="Time"><%= Calendar.strftime(@event.time, "%m/%d/%Y %I:%M %p") %></:item>
   <:item title="Participant count"> <%= length(@event_participants) %></:item>
   <:item title="Bag count"> <%= @event_participants |> Enum.map(fn p -> p.num_bags_collected || 0 end) |> Enum.sum() %></:item>
+  <:item title="Override participant count"> <%= @event.override_participant_count %></:item>
+  <:item title="Override bag count"> <%= @event.override_bag_count %></:item>
 </.list>
 
 <.header class="mt-10">
