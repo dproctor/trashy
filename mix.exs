@@ -33,6 +33,7 @@ defmodule Trashy.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.0"},
+      {:csv, "~> 3.2"},
       {:ecto_sql, "~> 3.6"},
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       {:finch, "~> 0.13"},
@@ -53,7 +54,8 @@ defmodule Trashy.MixProject do
       {:swoosh, "~> 1.3"},
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"}
+      {:telemetry_poller, "~> 1.0"},
+      {:timex, "~> 3.7"}
     ]
   end
 

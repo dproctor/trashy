@@ -45,6 +45,27 @@ defmodule Trashy.Events do
   end
 
   @doc """
+  Returns the list of events matching the query.
+
+  ## Examples
+
+      iex> get_matching_events(cleanup)
+      [%Event{}, ...]
+
+  """
+  def get_matching_events(cleanup_id, time, time_offset_hours \\ 48) do
+    start = Timex.shift(time, hours: -1 * time_offset_hours)
+    finish = Timex.shift(time, hours: time_offset_hours)
+
+    Repo.all(
+      from event in Event,
+        where: event.cleanup_id == ^cleanup_id and event.time >= ^start and event.time <= ^finish,
+        distinct: true,
+        order_by: [desc: event.time]
+    )
+  end
+
+  @doc """
   Returns the list of events which a participant has attended, as a list of datetimes and cleanup_ids.
 
   ## Examples

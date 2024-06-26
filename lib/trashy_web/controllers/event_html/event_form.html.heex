@@ -4,6 +4,9 @@
   </.error>
   <.input field={f[:cleanup_id]} type="select" label="Cleanup" prompt="Select a cleanup" options={@cleanups |> Enum.map(fn c -> {c.neighborhood, c.id} end)} />
   <.input field={f[:time]} type="datetime-local" label="Time" />
+
+  <.input field={f[:override_participant_count]} type="number" label="Override participant count" />
+  <.input field={f[:override_bag_count]} type="number" label="Override bag count" />
   <:actions>
     <.button>Save Event</.button>
   </:actions>
