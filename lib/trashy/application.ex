@@ -17,9 +17,11 @@ defmodule Trashy.Application do
       # Start Finch
       {Finch, name: Trashy.Finch},
       # Start the Endpoint (http/https)
-      TrashyWeb.Endpoint
+      TrashyWeb.Endpoint,
       # Start a worker by calling: Trashy.Worker.start_link(arg)
       # {Trashy.Worker, arg}
+      # 2 hours
+      {Trashy.CronWorker, 2 * 60 * 60 * 1000}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
