@@ -4,7 +4,8 @@
   </.error>
   <.input field={f[:is_organizer]} type="checkbox" label="Organizer" />
   <.input field={f[:is_admin]} type="checkbox" label="Admin" />
-  <.input field={f[:cleanups]} type="text" label="Cleanups" />
+  <.input field={f[:cleanups]} type="select" multiple="true" label="Cleanups" options={@cleanups |> Enum.map(fn c -> {c.neighborhood, c.id} end)} />
+      
 
   <:actions>
     <.button>Save User</.button>

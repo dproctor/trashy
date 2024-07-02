@@ -394,7 +394,10 @@ defmodule Trashy.Accounts do
 
   """
   def update_user(%User{} = user, attrs) do
+    IO.inspect(attrs)
+
     user
+    |> Repo.preload(:cleanups)
     |> User.admin_properties_changeset(attrs)
     |> Repo.update()
   end

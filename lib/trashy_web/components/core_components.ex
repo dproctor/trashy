@@ -373,6 +373,34 @@ defmodule TrashyWeb.CoreComponents do
     """
   end
 
+  def input(%{type: "checkgroup"} = assigns) do
+    ~H"""
+    <div phx-feedback-for={@name} class="text-sm">
+      <.label for={@id}><%= @label %></.label>
+      <div class="mt-1 w-full bg-white border border-gray-300 ...">
+        <div class="grid grid-cols-1 gap-1 text-sm items-baseline">
+          <input type="hidden" name={@name} value="" />
+          <div :for={{label, value} <- @options} class="...">
+            <label for={"#{@name}-#{value}"} class="...">
+              <input
+                type="checkbox"
+                id={"#{@name}-#{value}"}
+                name={@name}
+                value={value}
+                checked={value in @value}
+                class="mr-2 h-4 w-4 rounded ..."
+                {@rest}
+              />
+              <%= label %>
+            </label>
+          </div>
+        </div>
+      </div>
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    """
+  end
+
   def input(assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
