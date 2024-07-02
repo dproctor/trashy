@@ -12,7 +12,7 @@
   <:item title="First Name"><%= @user.first_name %></:item>
   <:item title="Last Name"><%= @user.last_name %></:item>
   <:item title="Email"><%= @user.email %></:item>
-  <:item title="Cleanups"><%= @user.cleanups |> Enum.map(fn cleanup -> cleanup.location end) %></:item>
+  <:item title="Cleanups"><%= @user.cleanups |> Enum.map(fn cleanup -> cleanup.neighborhood end) |> Enum.join("\n") %></:item>
 </.list>
 
 <.back navigate={~p"/admin/users"}>Back to users</.back>

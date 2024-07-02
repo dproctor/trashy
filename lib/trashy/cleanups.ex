@@ -160,6 +160,22 @@ defmodule Trashy.Cleanups do
   end
 
   @doc """
+  Returns the list of cleanup_organizers for a user.
+
+  ## Examples
+
+      iex> list_cleanup_organizers_for_user(id)
+      [%CleanupOrganizer{}, ...]
+
+  """
+  def list_cleanup_organizers_for_user(user_id) do
+    Repo.all(
+      from co in CleanupOrganizer,
+        where: co.organizer_id == ^user_id
+    )
+  end
+
+  @doc """
   Gets a single cleanup_organizer.
 
   Raises `Ecto.NoResultsError` if the Cleanup organizer does not exist.

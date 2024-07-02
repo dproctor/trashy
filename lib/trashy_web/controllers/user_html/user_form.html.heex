@@ -4,6 +4,7 @@
   </.error>
   <.input field={f[:is_organizer]} type="checkbox" label="Organizer" />
   <.input field={f[:is_admin]} type="checkbox" label="Admin" />
+  <.input field={f[:cleanups]} type="select" multiple={true} label="Cleanups" options={@all_cleanups} />
 
   <:actions>
     <.button>Save User</.button>

@@ -12,7 +12,7 @@ defmodule Trashy.Cleanups.CleanupOrganizer do
   @doc false
   def changeset(cleanup_organizer, attrs) do
     cleanup_organizer
-    |> cast(attrs, [])
+    |> cast(attrs, [:cleanup_id, :organizer_id])
     |> validate_required([])
   end
 end
