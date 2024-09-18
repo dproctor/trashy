@@ -14,9 +14,9 @@
       with pkgs; {
         devShells.default = mkShell {
           buildInputs = [
-            erlangR25
-            beam.packages.erlangR25.elixir_1_14
-            nodejs-16_x
+            erlang_25
+            beam.packages.erlang_25.elixir_1_14
+            yarn
           ]
           ++ lib.optionals stdenv.isLinux [
             # For ExUnit Notifier on Linux.
@@ -49,6 +49,23 @@
 
             # enables history for IEx
             export ERL_AFLAGS="-kernel shell_history enabled -kernel shell_history_path '\"$PWD/.erlang-history\"'"
+            export PS1="`echo $PS1 | rev | cut -c6- | rev` (trashy) \n$ "
+            cat <<\EOF
+                      _.,-----/=\-----,._
+                     (__ ~~~"""""""~~~ __)
+                      | ~~~"""""""""~~~ |
+                      | |  ; ,   , ;  | |
+                      | |  | |   | |  | |
+                      | |  | |   | |  | |
+                      | |  | |   | |  | |
+                      | |  | |   | |  | |
+                      | |  | |   | |  | |
+                      | |  | |   | |  | |
+                      | |  | |   | |  | |
+                      |. \_| |   | |_/ .|
+                       `-,.__ ~~~ __.,-'
+                             ~~~~~
+            EOF
           '';
         };
       }
