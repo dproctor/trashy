@@ -17,6 +17,7 @@
             erlang_25
             beam.packages.erlang_25.elixir_1_14
             yarn
+            wkhtmltopdf
           ]
           ++ lib.optionals stdenv.isLinux [
             # For ExUnit Notifier on Linux.

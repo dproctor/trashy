@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "canvas-confetti": "^1.9.3",
     "daisyui": "^2.51.6"
   }
 }

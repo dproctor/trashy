@@ -35,3 +35,6 @@ trashy-*.tar
 npm-debug.log
 /assets/node_modules/
 
+.erlang-history/
+.nix-hex/
+.nix-mix/

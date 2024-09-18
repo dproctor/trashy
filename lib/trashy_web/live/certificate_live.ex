@@ -3,6 +3,9 @@ defmodule TrashyWeb.CertificateLive do
 
   def render(assigns) do
     ~H"""
+    <%= if Enum.member?([1, 5, 10, 25, 50, 100, 200, 300, 500, 1000], @total_cleanup_count) do %>
+      <div id="page-load" phx-hook="DisplayConfetti"></div>
+    <% end %>
     <div class="min-h-screen bg-gradient-to-bl from-[#3B2F64] to-[#2C293F]">
       <div class="flex-col lg:flex-row-reverse">
         <p class="p-4 text-white text-right">

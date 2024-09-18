@@ -33,6 +33,7 @@ defmodule TrashyWeb.EventController do
     cleanup = Trashy.Cleanups.get_cleanup_with_preloads(event.cleanup_id)
     participants = Trashy.Events.list_event_participants_for_event(event)
     event_checkin_url = url(conn, ~p"/event_participants/checkin/#{id}/#{event.code}")
+    Logger.debug("Event checkin url #{event_checkin_url}")
 
     render(conn, :show,
       event: event,
