@@ -21,10 +21,10 @@ defmodule TrashyWeb.CertificateLive do
         </p>
         <div class="modal-action">
           <button
-            class="btn"
+            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
             onclick="document.getElementById('promo-modal').classList.remove('modal-open')"
           >
-            Close
+            x
           </button>
         </div>
       </div>
