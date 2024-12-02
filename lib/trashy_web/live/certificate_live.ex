@@ -6,29 +6,6 @@ defmodule TrashyWeb.CertificateLive do
     <%= if Enum.member?([1, 5, 10, 25, 50, 100, 200, 300, 500, 1000], @total_cleanup_count) do %>
       <div id="page-load" phx-hook="DisplayConfetti"></div>
     <% end %>
-    <div class="modal modal-open" id="promo-modal">
-      <div class="modal-box">
-        <a href="https://link.heylo.co/eAJ7">
-          <img
-            class="mx-auto"
-            src="/images/volunteer-appreciation-day.webp"
-            alt="Volunteer Appreciation Party"
-          />
-        </a>
-        <h2 class="text-center font-bold text-lg">🥳 Volunteer Appreciation Party 🥳</h2>
-        <p class="py-4">
-          Come out to Dolores Park Saturday, December 7 1-4pm, for a party to celebrate everyone working across San Francisco to clean up the city! Register <a href="https://link.heylo.co/eAJ7"> here</a>.
-        </p>
-        <div class="modal-action">
-          <button
-            class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            onclick="document.getElementById('promo-modal').classList.remove('modal-open')"
-          >
-            x
-          </button>
-        </div>
-      </div>
-    </div>
     <div class="min-h-screen bg-gradient-to-bl from-[#3B2F64] to-[#2C293F]">
       <div class="flex-col lg:flex-row-reverse">
         <p class="p-4 text-white text-right">
