@@ -50,7 +50,7 @@
 
             # enables history for IEx
             export ERL_AFLAGS="-kernel shell_history enabled -kernel shell_history_path '\"$PWD/.erlang-history\"'"
-            export PS1="`echo $PS1 | rev | cut -c6- | rev` (trashy) \n$ "
+            export DEV_ENVIRONMENT="trashy"
             cat <<\EOF
                       _.,-----/=\-----,._
                      (__ ~~~"""""""~~~ __)
