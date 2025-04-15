@@ -57,7 +57,9 @@ defmodule TrashyWeb.Router do
   scope "/admin", TrashyWeb do
     pipe_through([:browser, :require_authenticated_user, :require_admin])
 
+    get("/", PageController, :admin)
     resources "/users", UserController
+    get "/new_cleanup", CleanupController, :new
   end
 
   # Other scopes may use custom stacks.

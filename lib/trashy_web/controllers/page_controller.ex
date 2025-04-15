@@ -17,4 +17,8 @@ defmodule TrashyWeb.PageController do
   def organizer_not_authorized(conn, _params) do
     render(conn, :organizer_not_authorized)
   end
+
+  def admin(conn, _params) do
+    render(conn, :admin)
+  end
 end
