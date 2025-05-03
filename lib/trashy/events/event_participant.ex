@@ -28,11 +28,28 @@ defmodule Trashy.Events.EventParticipant do
       :num_bags_collected,
       :phone_number
     ])
+    |> trim_whitespace([
+      :first_name,
+      :last_name,
+      :instagram,
+      :email,
+      :phone_number
+    ])
     |> validate_required([:first_name, :email, :event_id])
     |> put_change(:code, Ecto.UUID.generate())
     |> unique_constraint(:name_email_event_id,
-      first_name: :event_participants_name_email_event_id_index,
+      name: :event_participants_name_email_event_id_index,
       message: "Expecting a unique firstname/email/event_id combination"
     )
+  end
+
+  defp trim_whitespace(changeset, fields) do
+    Enum.reduce(fields, changeset, fn field, acc ->
+      case get_change(acc, field) do
+        nil -> acc
+        value when is_binary(value) -> put_change(acc, field, String.trim(value))
+        _ -> acc
+      end
+    end)
   end
 end
