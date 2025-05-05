@@ -28,6 +28,8 @@ defmodule Trashy.Events.EventParticipant do
       :num_bags_collected,
       :phone_number
     ])
+    |> update_change(:first_name, &trim/1)
+    |> update_change(:last_name, &trim/1)
     |> validate_required([:first_name, :email, :event_id])
     |> put_change(:code, Ecto.UUID.generate())
     |> unique_constraint(:name_email_event_id,
@@ -35,4 +37,7 @@ defmodule Trashy.Events.EventParticipant do
       message: "Expecting a unique firstname/email/event_id combination"
     )
   end
+
+  defp trim(binary) when is_binary(binary), do: String.trim(binary)
+  defp trim(nil), do: nil
 end
