@@ -15,7 +15,7 @@ defmodule Trashy.CronWorker do
 
   @impl true
   def handle_info(:create_recurring_events, period_millis) do
-    Events.create_new_recurring_events(2)
+    Events.create_new_recurring_events(1)
 
     schedule_next(period_millis)
 
