@@ -8,7 +8,7 @@ defmodule Trashy.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"TrashySF", "devon.proctor@gmail.com"})
+      |> from({"Clean Up The City", "cutc-info@cleanupthecity.org"})
       |> subject(subject)
       |> text_body(body)
 

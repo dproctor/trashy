@@ -114,6 +114,9 @@ if config_env() == :prod do
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
   config :trashy, Trashy.Mailer,
-    adapter: Swoosh.Adapters.Sendgrid,
-    api_key: System.get_env("SENDGRID_API_KEY")
+    adapter: Swoosh.Adapters.AmazonSES,
+    region: "us-west-2",
+    access_key: System.get_env("AMAZON_IAM_ACCESS_KEY"),
+    secret: System.get_env("AMAZON_IAM_SECRET_ACCESS_KEY")
+
 end

@@ -22,8 +22,10 @@ config :trashy, TrashyWeb.Endpoint,
 
 # Configures the mailer
 config :trashy, Trashy.Mailer,
-  adapter: Swoosh.Adapters.Sendgrid,
-  api_key: System.get_env("SENDGRID_API_KEY")
+  adapter: Swoosh.Adapters.AmazonSES,
+  region: "us-west-2",
+  access_key: System.get_env("AMAZON_IAM_ACCESS_KEY"),
+  secret: System.get_env("AMAZON_IAM_SECRET_ACCESS_KEY")
 
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: Trashy.Finch
 
