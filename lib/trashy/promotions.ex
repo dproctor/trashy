@@ -45,6 +45,7 @@ defmodule Trashy.Promotions do
         distinct: true,
         select: promotion
     )
+    |> Repo.preload(:cleanup)
   end
 
   @doc """
