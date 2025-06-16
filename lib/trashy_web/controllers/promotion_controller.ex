@@ -5,7 +5,7 @@ defmodule TrashyWeb.PromotionController do
   alias Trashy.Promotions.Promotion
 
   def index(conn, _params) do
-    promotions = Promotions.list_promotions()
+    promotions = Promotions.list_promotions_for_user(conn.assigns.current_user)
     render(conn, :index, promotions: promotions)
   end
 

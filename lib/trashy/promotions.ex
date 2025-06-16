@@ -24,6 +24,30 @@ defmodule Trashy.Promotions do
   end
 
   @doc """
+  Returns the list of promotions for the provided user.
+
+  ## Examples
+
+      iex> list_promotions_for_user(user)
+      [%Promotion{}, ...]
+
+  """
+  def list_promotions_for_user(user) do
+    Repo.all(
+      from promotion in Promotion,
+        join: cl in Trashy.Cleanups.Cleanup,
+        on: promotion.cleanup_id == cl.id,
+        join: co in Trashy.Cleanups.CleanupOrganizer,
+        on: cl.id == co.cleanup_id,
+        join: o in Trashy.Accounts.User,
+        on: co.organizer_id == o.id,
+        where: o.id == ^user.id,
+        distinct: true,
+        select: promotion
+    )
+  end
+
+  @doc """
   Returns the list of promotions for the provided cleanup.
 
   ## Examples
