@@ -23,7 +23,7 @@ defmodule TrashyWeb.UserController do
 
     changeset = Accounts.change_user(user)
 
-    all_cleanups = Trashy.Cleanups.list_cleanups() |> Enum.map(fn c -> {c.neighborhood, c.id} end)
+    all_cleanups = Trashy.Cleanups.list_cleanups() |> Enum.map(fn c -> {"#{c.neighborhood} (#{c.location})", c.id} end)
 
     render(conn, :edit,
       user: user,
