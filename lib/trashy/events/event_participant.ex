@@ -6,6 +6,7 @@ defmodule Trashy.Events.EventParticipant do
     field(:email, :string)
     field(:first_name, :string)
     field(:last_name, :string)
+    # deprecated, no longer populated.
     field(:instagram, :string)
     field(:user_id, :id)
     field(:event_id, :id)

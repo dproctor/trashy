@@ -16,7 +16,6 @@
         <.input field={@form[:first_name]} type="text" placeholder="First Name" required class="bg-black"/>
         <.input field={@form[:last_name]} type="text" placeholder="Last Name (optional)" />
         <.input field={@form[:email]} type="email" placeholder="Email" required />
-        <.input field={@form[:instagram]} type="text" placeholder="Instagram handle (optional)" />
         <.input field={@form[:phone_number]} type="tel" placeholder="Phone (optional)" />
         <.input field={@form[:num_bags_collected]} type="number" value="1" label="Number of bags collected"/>
         <input id={@form[:event_id].id} name={@form[:event_id].name} type="number" value={@event.id} hidden />

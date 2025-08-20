@@ -34,7 +34,6 @@
   <:col :let={participant} label="Email"><%= participant.email %></:col>
   <:col :let={participant} label="First Name"><%= participant.first_name %></:col>
   <:col :let={participant} label="Last Name"><%= participant.last_name %></:col>
-  <:col :let={participant} label="Instagram"><%= participant.instagram %></:col>
   <:action :let={participant}>
     <div class="sr-only">
       <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"}>Show</.link>
@@ -52,18 +51,5 @@
   Participant Emails
 </.header>
 <p><%= Enum.map(@event_participants, & &1.email) |> Enum.join(", ") %></p>
-
-<.header class="mt-10">
-  Participant Instagrams
-</.header>
-<p>
-<%= @event_participants
-   |> Enum.map(& &1.instagram)
-   |> Enum.reject(&(&1 == nil or &1 == ""))
-   |> Enum.map(fn handle -> "@" <> handle end)
-   |> Enum.join(" ")
-%>
-</p>
-
 
 <.back navigate={~p"/organizer/events"}>Back to events</.back>
