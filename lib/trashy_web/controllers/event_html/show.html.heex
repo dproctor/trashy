@@ -39,6 +39,16 @@
   <:col :let={participant} label="Email"><%= participant.email %></:col>
   <:col :let={participant} label="First Name"><%= participant.first_name %></:col>
   <:col :let={participant} label="Last Name"><%= participant.last_name %></:col>
+  <:col :let={participant} label="Promos">
+    <%= Enum.join(
+      for promotion <- @participant_promotions[participant.id] do
+        promotion.icon
+      end
+    ) %>
+  </:col>
+  <:action :let={participant}>
+    <.link navigate={~p"/event_participants/certificate/#{participant.id}/#{participant.code}"}>Cert</.link>
+  </:action>
   <:action :let={participant}>
     <div class="sr-only">
       <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"}>Show</.link>
@@ -50,6 +60,17 @@
       Delete
     </.link>
   </:action>
+</.table>
+
+<.header class="mt-10">
+  Promotions
+</.header>
+
+<.table id="promotions" rows={Map.values(@promotions)} row_click={&JS.navigate(~p"/organizer/promotions/#{&1.id}")}>
+  <:col :let={promotion} label="Icon"><%= promotion.icon %></:col>
+  <:col :let={promotion} label="Merchant"><%= promotion.merchant %></:col>
+  <:col :let={promotion} label="Details"><%= promotion.details %></:col>
+  <:col :let={promotion} label="Claims"><%= @promotion_claims[promotion.id] %></:col>
 </.table>
 
 <.header class="mt-10">
