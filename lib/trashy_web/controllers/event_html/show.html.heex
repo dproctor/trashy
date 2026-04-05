@@ -18,6 +18,11 @@
 
 <.header class="mt-10">
   Check-in code
+  <:actions>
+    <.link href={@event_checkin_url}>
+      <.button>View check-in page</.button>
+    </.link>
+  </:actions>
 </.header>
 <img src={~p"/organizer/events/qr_code/#{Base.encode64(@event_checkin_url)}"} alt={@event_checkin_url}>
 
