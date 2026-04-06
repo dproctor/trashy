@@ -15,12 +15,16 @@ defmodule TrashyWeb.CertificateLive do
           <h1 class="text-5xl font-bold text-white mt-16 m-6">Today's Perks</h1>
           <h2 class="text-lg font-bold text-white m-6"><%= @formatted_date %></h2>
           <p class="text-md text-white m-6">
-            Here’s what’s good in the neighborhood! Redeem each reward by showing this screen to our participating partners. Valid for today only.
+            Here’s what’s good in the neighborhood! Redeem each reward by
+            showing this screen to our participating partners.
+            <br />
+            <br />
+            Valid for today only. Maximum of one reward per merchant.
           </p>
         </div>
         <div class="flex flex-col space-y-4 m-8">
-          <%= for promotion <- @promotions do %>
-            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 rounded " <> if promotion.is_claimed do "opacity-25" else "" end}>
+          <%= for { promotion, is_claimable } <- @promotions do %>
+            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 rounded " <> if is_claimable do "" else "opacity-25" end}>
               <h1 class="basis-1/6 text-3xl">
                 <%= promotion.promotion.icon %>
               </h1>
@@ -32,14 +36,22 @@ defmodule TrashyWeb.CertificateLive do
                   <%= promotion.promotion.details %>
                 </h4>
               </div>
-              <%= if promotion.is_claimed do %>
-              <% else %>
-                <label
-                  class={"btn basis-1/6 bg-white text-[#362D58] rounded normal-case border-none "<> if promotion.is_claimed do "text-white" else "" end}
-                  for={"claim_reward_modal_#{promotion.id}"}
-                >
-                  Redeem
-                </label>
+              <%= cond do %>
+                <% is_claimable -> %>
+                  <label
+                    class="btn basis-1/6 bg-white text-[#362D58] rounded normal-case border-none"
+                    for={"claim_reward_modal_#{promotion.id}"}
+                  >
+                    Redeem
+                  </label>
+
+                <% promotion.is_claimed -> %>
+                  <div class="basis-1/6 text-white text-center">
+                    Claimed
+                  </div>
+
+                <% true -> %>
+                  <%!-- claimed another reward from the same merchant --%>
               <% end %>
             </div>
             <input type="checkbox" id={"claim_reward_modal_#{promotion.id}"} class="modal-toggle" />
@@ -49,7 +61,7 @@ defmodule TrashyWeb.CertificateLive do
                   <div class="m-auto py-4">
                     <p class="text-[#362D58]">Show this to the merchant.</p>
                   </div>
-                  <div class="flex flex-row items-center bg-[#362D58] space-x-2 p-4 rounded" }>
+                  <div class="flex flex-row items-center bg-[#362D58] space-x-2 p-4 rounded">
                     <h1 class="basis-1/6 text-3xl p-2 rounded">
                       <%= promotion.promotion.icon %>
                     </h1>
@@ -100,6 +112,49 @@ defmodule TrashyWeb.CertificateLive do
     """
   end
 
+  @doc """
+  List the participant's promotions, and calculate if each is claimable.
+  """
+  def promotions_claimable(participant_id) do
+    promotions = Trashy.Promotions.list_event_participant_promotions(
+      participant_id
+    )
+
+    # Map merchant name to number of claims.
+    promotions_merchant_claims = Enum.frequencies(for(
+      promotion <- promotions,
+      promotion.is_claimed,
+      do: promotion.promotion.merchant
+    ))
+
+    for promotion <- promotions do
+      # The promotion is claimable if:
+      is_claimable = (
+        # It has not already been claimed, and...
+        !promotion.is_claimed &&
+        # No other claims exist for the same merchant.
+        Map.get(
+          promotions_merchant_claims, promotion.promotion.merchant, 0
+        ) < 1
+      )
+      { promotion, is_claimable }
+    end
+  end
+
+  @doc """
+  Check if the promotion is claimable.
+
+  NOTE: This still requires iterating over all promotions for this participant.
+  """
+  def promotion_is_claimable(participant_id, promotion) do
+    !promotion.is_claimed && Enum.any?(
+      promotions_claimable(participant_id),
+      fn { p, is_claimable } ->
+        is_claimable && p.id == promotion.id
+      end
+    )
+  end
+
   def mount(%{"participant_id" => participant_id, "code" => code}, _session, socket) do
     participant = Trashy.Events.get_event_participant!(participant_id)
 
@@ -110,7 +165,7 @@ defmodule TrashyWeb.CertificateLive do
         {:ok,
          assign(socket,
            participant_id: participant_id,
-           promotions: Trashy.Promotions.list_event_participant_promotions(participant_id),
+           promotions: promotions_claimable(participant_id),
            participant: participant,
            total_cleanup_count: Trashy.Events.get_total_participant_cleanup_count(participant),
            local_cleanup_count:
@@ -131,14 +186,16 @@ defmodule TrashyWeb.CertificateLive do
       ) do
     promotion = Trashy.Promotions.get_event_participant_promotion!(promotion_id)
 
-    case promotion.is_claimed do
-      true ->
-        {:noreply, assign(socket, success: false)}
-
-      false ->
-        Trashy.Promotions.update_event_participant_promotion(promotion, %{is_claimed: true})
-        promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
-        {:noreply, assign(socket, success: true, promotions: promotions)}
+    if promotion_is_claimable(participant_id, promotion) do
+      Trashy.Promotions.update_event_participant_promotion(promotion, %{is_claimed: true})
+      {:noreply, assign(socket,
+        success: true,
+        # Refresh promotions/claimability.
+        promotions: promotions_claimable(participant_id)
+      )}
+    else
+      # Promotion is not claimable.
+      {:noreply, assign(socket, success: false)}
     end
   end
 end
