@@ -7,6 +7,7 @@ defmodule Trashy.Promotions.EventParticipantPromotion do
     # field :promotion_id, :id
     belongs_to(:promotion, Trashy.Promotions.Promotion)
     belongs_to(:event_participant, Trashy.Events.EventParticipant)
+    field(:choice, :string, default: "")
 
     timestamps()
   end
@@ -14,7 +15,12 @@ defmodule Trashy.Promotions.EventParticipantPromotion do
   @doc false
   def changeset(event_participant_promotion, attrs) do
     event_participant_promotion
-    |> cast(attrs, [:is_claimed, :promotion_id, :event_participant_id])
+    |> cast(attrs, [
+      :is_claimed,
+      :promotion_id,
+      :event_participant_id,
+      :choice
+    ])
     |> validate_required([:is_claimed, :promotion_id, :event_participant_id])
   end
 end

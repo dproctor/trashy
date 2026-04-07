@@ -7,6 +7,12 @@
   <.input field={f[:icon]} type="text" label="Icon (path to asset)" />
   <.input field={f[:cleanup_id]} type="select" label="Cleanup" prompt="Select a cleanup" options={@cleanups |> Enum.map(fn c -> {c.neighborhood, c.id} end)} />
   <.input field={f[:is_disabled]} type="checkbox" label="Disabled" />
+  <.input
+    field={f[:choices]}
+    type="textarea"
+    label="Menu choices (one per line)"
+    value={Enum.join(f[:choices].value(), "\n")}
+  />
   <:actions>
     <.button>Save Promotion</.button>
   </:actions>
