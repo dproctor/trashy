@@ -37,29 +37,37 @@ defmodule TrashyWeb.EventController do
 
     promotions = for(
       promotion <- Trashy.Promotions.list_promotions_for_cleanup(cleanup),
-      into: %{},
-      do: { promotion.id, promotion }
-    )
+      into: %{}
+    ) do
+      { promotion.id, promotion }
+    end
 
     # Map each participant to a list of claimed promotions.
-    participant_promotions = for(
+    participant_epps_claimed = for(
       participant <- participants,
-      into: %{},
-      do: {
+      into: %{}
+    ) do
+      epps = Trashy.Promotions.list_event_participant_promotions(participant.id)
+      {
         participant.id,
-        for(
-          epp <-
-          Trashy.Promotions.list_event_participant_promotions(participant.id),
-          epp.is_claimed,
-          do: promotions[epp.promotion_id]
-        )
+        for epp <- epps, epp.is_claimed do epp end
       }
-    )
+    end
 
-    # Map promotion ID to number of claims.
-    promotion_claims = Enum.frequencies(
-      for promotion <- List.flatten(Map.values(participant_promotions)) do
-        promotion.id
+    # Map each promotion's choices (if any) to the number of claims.
+    promotion_choice_claims = Enum.reduce(
+      Enum.concat(Map.values(participant_epps_claimed)), %{},
+      fn epp, acc ->
+        Map.update(
+          acc, epp.promotion,
+          %{ epp.choice => 1 },   # default: count this choice
+          fn choice_claims ->
+            Map.update(
+              choice_claims, epp.choice, 1,
+              fn count -> count + 1 end
+            )
+          end
+        )
       end
     )
 
@@ -68,8 +76,8 @@ defmodule TrashyWeb.EventController do
       cleanup: cleanup,
       event_participants: participants,
       promotions: promotions,
-      participant_promotions: participant_promotions,
-      promotion_claims: promotion_claims,
+      participant_epps_claimed: participant_epps_claimed,
+      promotion_choice_claims: promotion_choice_claims,
       event_checkin_url: event_checkin_url
     )
   end

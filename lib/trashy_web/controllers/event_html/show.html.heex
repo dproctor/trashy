@@ -41,8 +41,8 @@
   <:col :let={participant} label="Last Name"><%= participant.last_name %></:col>
   <:col :let={participant} label="Promos">
     <%= Enum.join(
-      for promotion <- @participant_promotions[participant.id] do
-        promotion.icon
+      for epp <- @participant_epps_claimed[participant.id] do
+        epp.promotion.icon
       end
     ) %>
   </:col>
@@ -63,14 +63,34 @@
 </.table>
 
 <.header class="mt-10">
-  Promotions
+  Promotion Choices
 </.header>
 
-<.table id="promotions" rows={Map.values(@promotions)} row_click={&JS.navigate(~p"/organizer/promotions/#{&1.id}")}>
-  <:col :let={promotion} label="Icon"><%= promotion.icon %></:col>
-  <:col :let={promotion} label="Merchant"><%= promotion.merchant %></:col>
-  <:col :let={promotion} label="Details"><%= promotion.details %></:col>
-  <:col :let={promotion} label="Claims"><%= @promotion_claims[promotion.id] %></:col>
+<.table
+  id="promotions"
+  rows={Enum.concat(
+    for { promotion, choice_claims } <- @promotion_choice_claims do
+      for { choice, claims } <- choice_claims do
+        %{
+          promotion: promotion,
+          choice: choice,
+          claims: claims
+        }
+      end
+    end
+  )}
+  row_click={&JS.navigate(~p"/organizer/promotions/#{&1.promotion.id}")}
+>
+  <:col :let={r} label="Promotion">
+    <p><%= r.promotion.icon <> " " <> r.promotion.merchant %></p>
+    <p><%= r.promotion.details %></p>
+  </:col>
+  <:col :let={r} label="Choice">
+    <%= r.choice %>
+  </:col>
+  <:col :let={r} label="Claims">
+    <%= r.claims %>
+  </:col>
 </.table>
 
 <.header class="mt-10">
