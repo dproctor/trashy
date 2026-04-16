@@ -13,6 +13,11 @@
   <:item title="Icon"><%= @promotion.icon %></:item>
   <:item title="Cleanup"><%= @promotion.cleanup.neighborhood %></:item>
   <:item title="Disabled"><%= @promotion.is_disabled %></:item>
+  <:item title="Menu choices">
+    <ul>
+      <li :for={choice <- @promotion.choices}><%= choice %></li>
+    </ul>
+  </:item>
 </.list>
 
 <.back navigate={~p"/organizer/promotions"}>Back to promotions</.back>

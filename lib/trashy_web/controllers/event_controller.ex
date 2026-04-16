@@ -35,10 +35,42 @@ defmodule TrashyWeb.EventController do
     event_checkin_url = url(conn, ~p"/event_participants/checkin/#{id}/#{event.code}")
     Logger.debug("Event checkin url #{event_checkin_url}")
 
+    promotions = for(
+      promotion <- Trashy.Promotions.list_promotions_for_cleanup(cleanup),
+      into: %{}
+    ) do
+      { promotion.id, promotion }
+    end
+
+    # Map each participant to a list of claimed promotions.
+    participant_epps_claimed = for(
+      participant <- participants,
+      into: %{}
+    ) do
+      epps = Trashy.Promotions.list_event_participant_promotions(participant.id)
+      {
+        participant.id,
+        for epp <- epps, epp.is_claimed do epp end
+      }
+    end
+
+    # Map each promotion's choices (if any) to the number of claims.
+    promotion_choice_claims =
+      participant_epps_claimed
+      |> Map.values()
+      |> Enum.concat()  # Flatten into list of EventParticipantPromotions.
+      |> Enum.group_by(& &1.promotion, & &1.choice)
+      |> Map.new(fn { promotion, choices } ->
+        { promotion, Enum.frequencies(choices) }
+      end)
+
     render(conn, :show,
       event: event,
       cleanup: cleanup,
       event_participants: participants,
+      promotions: promotions,
+      participant_epps_claimed: participant_epps_claimed,
+      promotion_choice_claims: promotion_choice_claims,
       event_checkin_url: event_checkin_url
     )
   end

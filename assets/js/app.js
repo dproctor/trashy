@@ -50,6 +50,17 @@ Hooks.DisplayConfetti = {
     window.scrollTo(0, document.body.scrollHeight);
   }
 }
+Hooks.ModalCheckboxHandlers = {
+  mounted() {
+    var checkbox = this.el;
+    this.handleEvent(
+      "js:modal:#" + checkbox.id,
+      function onModal(payload) {
+          checkbox.checked = payload.open;
+      },
+    );
+  }
+}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}})

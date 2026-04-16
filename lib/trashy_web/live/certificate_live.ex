@@ -6,6 +6,7 @@ defmodule TrashyWeb.CertificateLive do
     <%= if Enum.member?([1, 5, 10, 25, 50, 100, 200, 300, 500, 1000], @total_cleanup_count) do %>
       <div id="page-load" phx-hook="DisplayConfetti"></div>
     <% end %>
+    <.flash kind={:error} title="Error!" flash={@flash} />
     <div class="min-h-screen bg-gradient-to-bl from-[#3B2F64] to-[#2C293F]">
       <div class="flex-col lg:flex-row-reverse">
         <p class="p-4 text-white text-right">
@@ -19,68 +20,102 @@ defmodule TrashyWeb.CertificateLive do
           </p>
         </div>
         <div class="flex flex-col space-y-4 m-8">
-          <%= for promotion <- @promotions do %>
-            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 rounded " <> if promotion.is_claimed do "opacity-25" else "" end}>
+          <%= for epp <- @epps do %>
+            <%
+              promotion = epp.promotion
+              choices? = (promotion.choices != [])
+            %>
+            <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 rounded " <> if epp.is_claimed do "opacity-25" else "" end}>
               <h1 class="basis-1/6 text-3xl">
-                <%= promotion.promotion.icon %>
+                <%= promotion.icon %>
               </h1>
               <div class="basis-2/3">
                 <h3 class="text-white">
-                  <%= promotion.promotion.merchant %>
+                  <%= promotion.merchant %>
                 </h3>
                 <h4 class="text-xs text-white">
-                  <%= promotion.promotion.details %>
+                  <%= promotion.details %>
                 </h4>
               </div>
-              <%= if promotion.is_claimed do %>
+              <%= if epp.is_claimed do %>
+                <h3 class="basis-1/6 text-white text-center">
+                  <%= epp.choice || "Redeemed" %>
+                </h3>
               <% else %>
                 <label
-                  class={"btn basis-1/6 bg-white text-[#362D58] rounded normal-case border-none "<> if promotion.is_claimed do "text-white" else "" end}
-                  for={"claim_reward_modal_#{promotion.id}"}
+                  class="btn basis-1/6 bg-white text-[#362D58] rounded normal-case border-none"
+                  for={"claim_reward_modal_#{epp.id}"}
                 >
                   Redeem
                 </label>
               <% end %>
             </div>
-            <input type="checkbox" id={"claim_reward_modal_#{promotion.id}"} class="modal-toggle" />
-            <div class="modal">
+            <input
+              type="checkbox"
+              id={"claim_reward_modal_#{epp.id}"}
+              class="modal-toggle"
+              phx-hook="ModalCheckboxHandlers"
+            />
+            <.form
+              :let={f}
+              for={to_form(
+                Trashy.Promotions.change_event_participant_promotion(epp),
+                as: "epp_chg"
+              )}
+              id={"claim_reward_form_#{epp.id}"}
+              class="modal"
+              phx-submit="claim_reward"
+            >
+              <.input type="hidden" field={f[:id]} />
               <div class="modal-box">
-                <div class="flex flex-col">
-                  <div class="m-auto py-4">
-                    <p class="text-[#362D58]">Show this to the merchant.</p>
-                  </div>
+                <div class="flex flex-col space-y-4">
+                  <p class="text-center text-[#362D58]">Show this to the merchant.</p>
                   <div class="flex flex-row items-center bg-[#362D58] space-x-2 p-4 rounded" }>
                     <h1 class="basis-1/6 text-3xl p-2 rounded">
-                      <%= promotion.promotion.icon %>
+                      <%= promotion.icon %>
                     </h1>
                     <div class="basis-2/3">
                       <h3 class="text-white">
-                        <%= promotion.promotion.merchant %>
+                        <%= promotion.merchant %>
                       </h3>
-                      <h4 class="text-xs text-white">
-                        <%= promotion.promotion.details %>
-                      </h4>
+                      <%= if !choices? do %>
+                        <h4 class="text-xs text-white">
+                          <%= promotion.details %>
+                        </h4>
+                      <% else %>
+                      <% end %>
                     </div>
                   </div>
-                  <div class="flex flex-row justify-between py-6">
+                  <%= if choices? do %>
+                    <div class="flex flex-col bg-[#362D58] p-4 rounded">
+                      <.input
+                        type="select"
+                        field={f[:choice]}
+                        options={promotion.choices}
+                        label={promotion.details}
+                        prompt=""
+                        required
+                      />
+                    </div>
+                  <% else %>
+                  <% end %>
+                  <div class="flex flex-row justify-between">
                     <label
                       class="btn basis-1/6 bg-white text-[#362D58] disabled:text-white rounded normal-case border-[#362D58]"
-                      for={"claim_reward_modal_#{promotion.id}"}
+                      for={"claim_reward_modal_#{epp.id}"}
                     >
                       Cancel
                     </label>
-                    <label
+                    <.button
+                      type="submit"
                       class="btn basis-1/6 text-white bg-[#362D58] disabled:text-white rounded normal-case border-none"
-                      for={"claim_reward_modal_#{promotion.id}"}
-                      phx-click="claim_reward"
-                      phx-value-promotion_id={promotion.id}
                     >
                       Redeem
-                    </label>
+                    </.button>
                   </div>
                 </div>
               </div>
-            </div>
+            </.form>
           <% end %>
         </div>
         <div class="text-center lg:text-left">
@@ -106,11 +141,14 @@ defmodule TrashyWeb.CertificateLive do
     case code == participant.code do
       true ->
         event = Trashy.Events.get_event!(participant.event_id)
+        epps = Trashy.Promotions.list_event_participant_promotions(
+          participant_id
+        )
 
         {:ok,
          assign(socket,
            participant_id: participant_id,
-           promotions: Trashy.Promotions.list_event_participant_promotions(participant_id),
+           epps: epps,
            participant: participant,
            total_cleanup_count: Trashy.Events.get_total_participant_cleanup_count(participant),
            local_cleanup_count:
@@ -125,20 +163,35 @@ defmodule TrashyWeb.CertificateLive do
   end
 
   def handle_event(
-        "claim_reward",
-        %{"promotion_id" => promotion_id},
-        %{assigns: %{participant_id: participant_id}} = socket
-      ) do
-    promotion = Trashy.Promotions.get_event_participant_promotion!(promotion_id)
+    "claim_reward",
+    %{"epp_chg" => epp_chg},
+    %{assigns: %{participant_id: participant_id}} = socket
+  ) do
+    epp = Trashy.Promotions.get_event_participant_promotion!(epp_chg["id"])
 
-    case promotion.is_claimed do
-      true ->
-        {:noreply, assign(socket, success: false)}
-
-      false ->
-        Trashy.Promotions.update_event_participant_promotion(promotion, %{is_claimed: true})
-        promotions = Trashy.Promotions.list_event_participant_promotions(participant_id)
-        {:noreply, assign(socket, success: true, promotions: promotions)}
+    if epp.is_claimed do
+      {
+        :noreply,
+        socket
+        |> put_flash(:error, "This reward has already been redeemed.")
+      }
+    else
+      { :ok, _ } = Trashy.Promotions.update_event_participant_promotion(
+        epp, Map.merge(
+          # Filter only to allowed keys.
+          Map.take(epp_chg, ["choice"]),
+          %{ "is_claimed" => true }   # Always mark as claimed.
+        )
+      )
+      epps = Trashy.Promotions.list_event_participant_promotions(participant_id)
+      {
+        :noreply,
+        socket
+        |> assign(epps: epps)
+        |> push_event("js:modal:#claim_reward_modal_#{epp.id}", %{
+          open: false   # Close the modal.
+        })
+      }
     end
   end
 end

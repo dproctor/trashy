@@ -66,16 +66,6 @@ defmodule Trashy.Events do
     )
   end
 
-  @doc """
-  Returns the list of events which a participant has attended, as a list of datetimes and cleanup_ids.
-
-  ## Examples
-
-      iex> list_events_for_participant(cleanup)
-      [%Event{}, ...]
-
-  """
-
   def get_total_participant_cleanup_count(participant) do
     query =
       from event_participant in EventParticipant,

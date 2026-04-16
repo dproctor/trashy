@@ -18,6 +18,11 @@
 
 <.header class="mt-10">
   Check-in code
+  <:actions>
+    <.link href={@event_checkin_url}>
+      <.button>View check-in page</.button>
+    </.link>
+  </:actions>
 </.header>
 <img src={~p"/organizer/events/qr_code/#{Base.encode64(@event_checkin_url)}"} alt={@event_checkin_url}>
 
@@ -34,6 +39,16 @@
   <:col :let={participant} label="Email"><%= participant.email %></:col>
   <:col :let={participant} label="First Name"><%= participant.first_name %></:col>
   <:col :let={participant} label="Last Name"><%= participant.last_name %></:col>
+  <:col :let={participant} label="Promos">
+    <%= Enum.join(
+      for epp <- @participant_epps_claimed[participant.id] do
+        epp.promotion.icon
+      end
+    ) %>
+  </:col>
+  <:action :let={participant}>
+    <.link navigate={~p"/event_participants/certificate/#{participant.id}/#{participant.code}"}>Cert</.link>
+  </:action>
   <:action :let={participant}>
     <div class="sr-only">
       <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"}>Show</.link>
@@ -45,6 +60,34 @@
       Delete
     </.link>
   </:action>
+</.table>
+
+<.header class="mt-10">
+  Promotion Choices
+</.header>
+
+<.table
+  id="promotions"
+  rows={for(
+    { promotion, choice_claims } <- @promotion_choice_claims,
+    { choice, claims } <- choice_claims
+  ) do %{
+    promotion: promotion,
+    choice: choice,
+    claims: claims
+  } end}
+  row_click={&JS.navigate(~p"/organizer/promotions/#{&1.promotion.id}")}
+>
+  <:col :let={r} label="Promotion">
+    <p><%= r.promotion.icon <> " " <> r.promotion.merchant %></p>
+    <p><%= r.promotion.details %></p>
+  </:col>
+  <:col :let={r} label="Choice">
+    <%= r.choice %>
+  </:col>
+  <:col :let={r} label="Claims">
+    <%= r.claims %>
+  </:col>
 </.table>
 
 <.header class="mt-10">
