@@ -55,21 +55,14 @@ defmodule TrashyWeb.EventController do
     end
 
     # Map each promotion's choices (if any) to the number of claims.
-    promotion_choice_claims = Enum.reduce(
-      Enum.concat(Map.values(participant_epps_claimed)), %{},
-      fn epp, acc ->
-        Map.update(
-          acc, epp.promotion,
-          %{ epp.choice => 1 },   # default: count this choice
-          fn choice_claims ->
-            Map.update(
-              choice_claims, epp.choice, 1,
-              fn count -> count + 1 end
-            )
-          end
-        )
-      end
-    )
+    promotion_choice_claims =
+      participant_epps_claimed
+      |> Map.values()
+      |> Enum.concat()  # Flatten into list of EventParticipantPromotions.
+      |> Enum.group_by(& &1.promotion, & &1.choice)
+      |> Map.new(fn { promotion, choices } ->
+        { promotion, Enum.frequencies(choices) }
+      end)
 
     render(conn, :show,
       event: event,

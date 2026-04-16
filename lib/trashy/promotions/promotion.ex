@@ -15,16 +15,11 @@ defmodule Trashy.Promotions.Promotion do
 
   @doc false
   def changeset(promotion, attrs) do
-    attrs = Map.replace(
-      attrs, "choices",
-      for s <- String.split(
-        attrs["choices"] || "",
-        "\n",   # Split line-by-line.
-        trim: true  # Ignore empty lines.
-      ) do
-        String.trim(s)  # Trim whitespace.
-      end
-    )
+    attrs = Map.update(attrs, "choices", [], fn val ->
+      (val || "")
+      |> String.split("\n", trim: true)
+      |> Enum.map(&String.trim/1)
+    end)
     promotion
     |> cast(attrs, [
       :merchant,

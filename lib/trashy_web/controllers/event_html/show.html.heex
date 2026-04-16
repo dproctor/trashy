@@ -68,17 +68,14 @@
 
 <.table
   id="promotions"
-  rows={Enum.concat(
-    for { promotion, choice_claims } <- @promotion_choice_claims do
-      for { choice, claims } <- choice_claims do
-        %{
-          promotion: promotion,
-          choice: choice,
-          claims: claims
-        }
-      end
-    end
-  )}
+  rows={for(
+    { promotion, choice_claims } <- @promotion_choice_claims,
+    { choice, claims } <- choice_claims
+  ) do %{
+    promotion: promotion,
+    choice: choice,
+    claims: claims
+  } end}
   row_click={&JS.navigate(~p"/organizer/promotions/#{&1.promotion.id}")}
 >
   <:col :let={r} label="Promotion">

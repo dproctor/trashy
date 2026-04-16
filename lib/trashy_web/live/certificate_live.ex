@@ -23,7 +23,7 @@ defmodule TrashyWeb.CertificateLive do
           <%= for epp <- @epps do %>
             <%
               promotion = epp.promotion
-              choices? = length(promotion.choices) > 0
+              choices? = (promotion.choices != [])
             %>
             <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 rounded " <> if epp.is_claimed do "opacity-25" else "" end}>
               <h1 class="basis-1/6 text-3xl">
@@ -176,16 +176,12 @@ defmodule TrashyWeb.CertificateLive do
         |> put_flash(:error, "This reward has already been redeemed.")
       }
     else
-      epp_chg = for key <- [
-        # Filter only to allowed keys.
-        "choice"
-      ], into: %{
-        "is_claimed" => true  # Always mark as claimed.
-      } do
-        { key, epp_chg[key] }
-      end
-      Trashy.Promotions.update_event_participant_promotion(
-        epp, epp_chg
+      { :ok, _ } = Trashy.Promotions.update_event_participant_promotion(
+        epp, Map.merge(
+          # Filter only to allowed keys.
+          Map.take(epp_chg, ["choice"]),
+          %{ "is_claimed" => true }   # Always mark as claimed.
+        )
       )
       epps = Trashy.Promotions.list_event_participant_promotions(participant_id)
       {
