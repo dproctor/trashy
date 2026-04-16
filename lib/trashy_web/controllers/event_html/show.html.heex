@@ -70,13 +70,13 @@
   id="promotions"
   rows={for(
     { promotion, choice_claims } <- @promotion_choice_claims,
-    { choice, claims } <- choice_claims
+    { {choice, notes}, claims } <- choice_claims
   ) do %{
     promotion: promotion,
     choice: choice,
+    notes: notes,
     claims: claims
   } end}
-  row_click={&JS.navigate(~p"/organizer/promotions/#{&1.promotion.id}")}
 >
   <:col :let={r} label="Promotion">
     <p><%= r.promotion.icon <> " " <> r.promotion.merchant %></p>
@@ -85,8 +85,17 @@
   <:col :let={r} label="Choice">
     <%= r.choice %>
   </:col>
+  <:col :let={r} label="Notes">
+    <%= r.notes %>
+  </:col>
   <:col :let={r} label="Claims">
-    <%= r.claims %>
+    <%= r.claims.count %>
+  </:col>
+  <:col :let={r} label="Names">
+    <%= r.claims.names %>
+  </:col>
+  <:col :let={r} label="Emails">
+    <%= r.claims.emails %>
   </:col>
 </.table>
 

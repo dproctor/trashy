@@ -13,6 +13,7 @@
     label="Menu choices (one per line)"
     value={Enum.join(f[:choices].value(), "\n")}
   />
+  <.input field={f[:show_notes_field]} type="checkbox" label="Show notes field" />
   <:actions>
     <.button>Save Promotion</.button>
   </:actions>

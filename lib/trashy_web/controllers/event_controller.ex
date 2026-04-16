@@ -35,33 +35,51 @@ defmodule TrashyWeb.EventController do
     event_checkin_url = url(conn, ~p"/event_participants/checkin/#{id}/#{event.code}")
     Logger.debug("Event checkin url #{event_checkin_url}")
 
-    promotions = for(
-      promotion <- Trashy.Promotions.list_promotions_for_cleanup(cleanup),
-      into: %{}
-    ) do
-      { promotion.id, promotion }
-    end
+    promotions =
+      for(
+        promotion <- Trashy.Promotions.list_promotions_for_cleanup(cleanup),
+        into: %{}
+      ) do
+        {promotion.id, promotion}
+      end
+
+    participants_by_id = Map.new(participants, &{&1.id, &1})
 
     # Map each participant to a list of claimed promotions.
-    participant_epps_claimed = for(
-      participant <- participants,
-      into: %{}
-    ) do
-      epps = Trashy.Promotions.list_event_participant_promotions(participant.id)
-      {
-        participant.id,
-        for epp <- epps, epp.is_claimed do epp end
-      }
-    end
+    participant_epps_claimed =
+      Map.new(participants, fn participant ->
+        epps = Trashy.Promotions.list_event_participant_promotions(participant.id)
+        {participant.id, Enum.filter(epps, & &1.is_claimed)}
+      end)
 
-    # Map each promotion's choices (if any) to the number of claims.
     promotion_choice_claims =
       participant_epps_claimed
       |> Map.values()
-      |> Enum.concat()  # Flatten into list of EventParticipantPromotions.
-      |> Enum.group_by(& &1.promotion, & &1.choice)
-      |> Map.new(fn { promotion, choices } ->
-        { promotion, Enum.frequencies(choices) }
+      |> Enum.concat()
+      |> Enum.group_by(& &1.promotion, fn epp ->
+        participant = participants_by_id[epp.event_participant_id]
+
+        %{
+          choice: epp.choice,
+          notes: epp.notes,
+          name: participant.first_name <> " " <> participant.last_name,
+          email: participant.email
+        }
+      end)
+      |> Map.new(fn {promotion, entries} ->
+        summary =
+          entries
+          |> Enum.group_by(&{&1.choice, &1.notes})
+          |> Map.new(fn {{choice, notes}, items} ->
+            {{choice, notes},
+             %{
+               count: length(items),
+               names: items |> Enum.map(& &1.name) |> Enum.join(", "),
+               emails: items |> Enum.map(& &1.email) |> Enum.join(", ")
+             }}
+          end)
+
+        {promotion, summary}
       end)
 
     render(conn, :show,

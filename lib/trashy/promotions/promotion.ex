@@ -9,6 +9,7 @@ defmodule Trashy.Promotions.Promotion do
     field(:is_disabled, :boolean)
     field(:icon, :string)
     field(:choices, {:array, :string}, default: [])
+    field(:show_notes_field, :boolean)
 
     timestamps()
   end
@@ -37,7 +38,8 @@ defmodule Trashy.Promotions.Promotion do
       :cleanup_id,
       :is_disabled,
       :icon,
-      :choices
+      :choices,
+      :show_notes_field
     ])
     |> validate_required([:merchant, :details, :cleanup_id])
   end

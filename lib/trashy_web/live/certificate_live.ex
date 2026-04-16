@@ -21,10 +21,8 @@ defmodule TrashyWeb.CertificateLive do
         </div>
         <div class="flex flex-col space-y-4 m-8">
           <%= for epp <- @epps do %>
-            <%
-              promotion = epp.promotion
-              choices? = (promotion.choices != [])
-            %>
+            <% promotion = epp.promotion
+            choices? = promotion.choices != [] %>
             <div class={"flex flex-row items-center space-x-2 bg-[#56506F] p-4 rounded " <> if epp.is_claimed do "opacity-25" else "" end}>
               <h1 class="basis-1/6 text-3xl">
                 <%= promotion.icon %>
@@ -58,10 +56,12 @@ defmodule TrashyWeb.CertificateLive do
             />
             <.form
               :let={f}
-              for={to_form(
-                Trashy.Promotions.change_event_participant_promotion(epp),
-                as: "epp_chg"
-              )}
+              for={
+                to_form(
+                  Trashy.Promotions.change_event_participant_promotion(epp),
+                  as: "epp_chg"
+                )
+              }
               id={"claim_reward_form_#{epp.id}"}
               class="modal"
               phx-submit="claim_reward"
@@ -97,7 +97,15 @@ defmodule TrashyWeb.CertificateLive do
                         required
                       />
                     </div>
-                  <% else %>
+                  <% end %>
+                  <%= if promotion.show_notes_field do %>
+                    <div class="flex flex-col bg-[#362D58] p-4 rounded">
+                      <.input
+                        type="text"
+                        field={f[:notes]}
+                        label="Notes for merchant (e.g. dietary preferences)"
+                      />
+                    </div>
                   <% end %>
                   <div class="flex flex-row justify-between">
                     <label
@@ -141,9 +149,7 @@ defmodule TrashyWeb.CertificateLive do
     case code == participant.code do
       true ->
         event = Trashy.Events.get_event!(participant.event_id)
-        epps = Trashy.Promotions.list_event_participant_promotions(
-          participant_id
-        )
+        epps = Trashy.Promotions.list_event_participant_promotions(participant_id)
 
         {:ok,
          assign(socket,
@@ -163,10 +169,10 @@ defmodule TrashyWeb.CertificateLive do
   end
 
   def handle_event(
-    "claim_reward",
-    %{"epp_chg" => epp_chg},
-    %{assigns: %{participant_id: participant_id}} = socket
-  ) do
+        "claim_reward",
+        %{"epp_chg" => epp_chg},
+        %{assigns: %{participant_id: participant_id}} = socket
+      ) do
     epp = Trashy.Promotions.get_event_participant_promotion!(epp_chg["id"])
 
     if epp.is_claimed do
@@ -176,20 +182,26 @@ defmodule TrashyWeb.CertificateLive do
         |> put_flash(:error, "This reward has already been redeemed.")
       }
     else
-      { :ok, _ } = Trashy.Promotions.update_event_participant_promotion(
-        epp, Map.merge(
-          # Filter only to allowed keys.
-          Map.take(epp_chg, ["choice"]),
-          %{ "is_claimed" => true }   # Always mark as claimed.
+      {:ok, _} =
+        Trashy.Promotions.update_event_participant_promotion(
+          epp,
+          Map.merge(
+            # Filter only to allowed keys.
+            Map.take(epp_chg, ["choice", "notes"]),
+            # Always mark as claimed.
+            %{"is_claimed" => true}
+          )
         )
-      )
+
       epps = Trashy.Promotions.list_event_participant_promotions(participant_id)
+
       {
         :noreply,
         socket
         |> assign(epps: epps)
         |> push_event("js:modal:#claim_reward_modal_#{epp.id}", %{
-          open: false   # Close the modal.
+          # Close the modal.
+          open: false
         })
       }
     end

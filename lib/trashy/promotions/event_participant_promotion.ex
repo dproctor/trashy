@@ -8,6 +8,7 @@ defmodule Trashy.Promotions.EventParticipantPromotion do
     belongs_to(:promotion, Trashy.Promotions.Promotion)
     belongs_to(:event_participant, Trashy.Events.EventParticipant)
     field(:choice, :string, default: "")
+    field(:notes, :string, default: "")
 
     timestamps()
   end
@@ -19,7 +20,8 @@ defmodule Trashy.Promotions.EventParticipantPromotion do
       :is_claimed,
       :promotion_id,
       :event_participant_id,
-      :choice
+      :choice,
+      :notes
     ])
     |> validate_required([:is_claimed, :promotion_id, :event_participant_id])
   end
