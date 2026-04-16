@@ -15,11 +15,21 @@ defmodule Trashy.Promotions.Promotion do
 
   @doc false
   def changeset(promotion, attrs) do
-    attrs = Map.update(attrs, "choices", [], fn val ->
-      (val || "")
-      |> String.split("\n", trim: true)
-      |> Enum.map(&String.trim/1)
-    end)
+    attrs =
+      case Map.fetch(attrs, "choices") do
+        {:ok, val} ->
+          Map.put(
+            attrs,
+            "choices",
+            val
+            |> String.split("\n", trim: true)
+            |> Enum.map(&String.trim/1)
+          )
+
+        :error ->
+          attrs
+      end
+
     promotion
     |> cast(attrs, [
       :merchant,
@@ -27,7 +37,7 @@ defmodule Trashy.Promotions.Promotion do
       :cleanup_id,
       :is_disabled,
       :icon,
-      :choices,
+      :choices
     ])
     |> validate_required([:merchant, :details, :cleanup_id])
   end
