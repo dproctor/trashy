@@ -62,7 +62,7 @@ defmodule TrashyWeb.EventController do
         %{
           choice: epp.choice,
           notes: epp.notes,
-          name: participant.first_name <> " " <> participant.last_name,
+          name: "#{participant.first_name || ""} #{participant.last_name || ""}" |> String.trim(),
           email: participant.email
         }
       end)
