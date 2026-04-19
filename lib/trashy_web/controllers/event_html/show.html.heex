@@ -1,6 +1,6 @@
 <.header>
   Event <%= @event.id %>
-  <:subtitle><%= "#{@cleanup.neighborhood} (#{@cleanup.location})"%></:subtitle>
+  <:subtitle><%= "#{@cleanup.neighborhood} (#{@cleanup.location})" %></:subtitle>
   <:actions>
     <.link href={~p"/organizer/events/#{@event}/edit"}>
       <.button>Edit event</.button>
@@ -10,10 +10,8 @@
 
 <.list>
   <:item title="Time"><%= Calendar.strftime(@event.time, "%m/%d/%Y %I:%M %p") %></:item>
-  <:item title="Participant count"> <%= length(@event_participants) %></:item>
-  <:item title="Bag count"> <%= @event_participants |> Enum.map(fn p -> p.num_bags_collected || 0 end) |> Enum.sum() %></:item>
-  <:item title="Override participant count"> <%= @event.override_participant_count %></:item>
-  <:item title="Override bag count"> <%= @event.override_bag_count %></:item>
+  <:item title="Participant count"><%= length(@event_participants) %></:item>
+  <:item title="Override participant count"><%= @event.override_participant_count %></:item>
 </.list>
 
 <.header class="mt-10">
@@ -24,7 +22,10 @@
     </.link>
   </:actions>
 </.header>
-<img src={~p"/organizer/events/qr_code/#{Base.encode64(@event_checkin_url)}"} alt={@event_checkin_url}>
+<img
+  src={~p"/organizer/events/qr_code/#{Base.encode64(@event_checkin_url)}"}
+  alt={@event_checkin_url}
+/>
 
 <.header class="mt-10">
   Participants
@@ -35,7 +36,11 @@
   </:actions>
 </.header>
 
-<.table id="event_participants" rows={@event_participants} row_click={&JS.navigate(~p"/organizer/events/#{@event}/event_participants/#{&1}")}>
+<.table
+  id="event_participants"
+  rows={@event_participants}
+  row_click={&JS.navigate(~p"/organizer/events/#{@event}/event_participants/#{&1}")}
+>
   <:col :let={participant} label="Email"><%= participant.email %></:col>
   <:col :let={participant} label="First Name"><%= participant.first_name %></:col>
   <:col :let={participant} label="Last Name"><%= participant.last_name %></:col>
@@ -47,16 +52,26 @@
     ) %>
   </:col>
   <:action :let={participant}>
-    <.link navigate={~p"/event_participants/certificate/#{participant.id}/#{participant.code}"}>Cert</.link>
+    <.link navigate={~p"/event_participants/certificate/#{participant.id}/#{participant.code}"}>
+      Cert
+    </.link>
   </:action>
   <:action :let={participant}>
     <div class="sr-only">
-      <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"}>Show</.link>
+      <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"}>
+        Show
+      </.link>
     </div>
-    <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}/edit"}>Edit</.link>
+    <.link navigate={~p"/organizer/events/#{@event.id}/event_participants/#{participant}/edit"}>
+      Edit
+    </.link>
   </:action>
   <:action :let={participant}>
-    <.link href={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"} method="delete" data-confirm="Are you sure?">
+    <.link
+      href={~p"/organizer/events/#{@event.id}/event_participants/#{participant}"}
+      method="delete"
+      data-confirm="Are you sure?"
+    >
       Delete
     </.link>
   </:action>
@@ -68,15 +83,19 @@
 
 <.table
   id="promotions"
-  rows={for(
-    { promotion, choice_claims } <- @promotion_choice_claims,
-    { {choice, notes}, claims } <- choice_claims
-  ) do %{
-    promotion: promotion,
-    choice: choice,
-    notes: notes,
-    claims: claims
-  } end}
+  rows={
+    for(
+      {promotion, choice_claims} <- @promotion_choice_claims,
+      {{choice, notes}, claims} <- choice_claims
+    ) do
+      %{
+        promotion: promotion,
+        choice: choice,
+        notes: notes,
+        claims: claims
+      }
+    end
+  }
 >
   <:col :let={r} label="Promotion">
     <p><%= r.promotion.icon <> " " <> r.promotion.merchant %></p>
