@@ -248,7 +248,8 @@ defmodule Trashy.Events do
     Repo.all(
       from participant in EventParticipant,
         where: participant.event_id == ^event.id,
-        distinct: true
+        distinct: true,
+        order_by: [asc: participant.inserted_at]
     )
   end
 
