@@ -51,6 +51,13 @@
       end
     ) %>
   </:col>
+  <:col :let={participant} label="Order">
+    <%= Enum.join(
+      for epp <- @participant_epps_claimed[participant.id] do
+        "#{epp.choice || ""} #{epp.notes || ""}"
+      end, "\n"
+    ) %>
+  </:col>
   <:action :let={participant}>
     <.link navigate={~p"/event_participants/certificate/#{participant.id}/#{participant.code}"}>
       Cert
