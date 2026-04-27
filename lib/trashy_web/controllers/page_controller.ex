@@ -10,6 +10,10 @@ defmodule TrashyWeb.PageController do
     render(conn, :home, layout: false)
   end
 
+  def privacy(conn, _params) do
+    render(conn, :privacy, layout: false)
+  end
+
   def organizer(conn, _params) do
     render(conn, :organizer)
   end

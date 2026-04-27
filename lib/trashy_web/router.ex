@@ -21,6 +21,7 @@ defmodule TrashyWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :home)
+    get("/privacy", PageController, :privacy)
     get("/event_participants/checkin/:event_id/:code", EventParticipantController, :checkin)
 
     put(
