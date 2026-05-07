@@ -86,7 +86,7 @@ defmodule TrashyWeb.PageController do
         promotion_choice_claims: promotion_choice_claims
       )
     else
-      _ -> render(conn, :merchant_no_event, layout: true)
+      _ -> render(conn, :merchant_no_event)
     end
   end
 end
