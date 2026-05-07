@@ -63,6 +63,12 @@ defmodule TrashyWeb.Router do
     get "/new_cleanup", CleanupController, :new
   end
 
+  scope "/merchant", TrashyWeb do
+    pipe_through([:browser, :require_authenticated_user, :require_merchant])
+
+    get("/", PageController, :merchant)
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", TrashyWeb do
   #   pipe_through :api

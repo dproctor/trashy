@@ -8,6 +8,7 @@
   <:col :let={user} label="Email"><%= user.email %></:col>
   <:col :let={user} label="Organizer"><%= user.is_organizer %></:col>
   <:col :let={user} label="Admin"><%= user.is_admin %></:col>
+  <:col :let={user} label="Merchant"><%= user.is_merchant %></:col>
   <:col :let={user} label="Cleanups"><%= user.cleanups |> Enum.map(fn c -> "#{c.neighborhood} (#{c.location})" end) |> Enum.join("\n") %></:col>
   <:action :let={user}>
     <div class="sr-only">

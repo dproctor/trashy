@@ -224,6 +224,21 @@ defmodule TrashyWeb.UserAuth do
   end
 
   @doc """
+  Used for routes that require the user to be a merchant.
+  """
+  def require_merchant(conn, _opts) do
+    if conn.assigns[:current_user].is_merchant do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You do not have permission to view this page.")
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/not_authorized")
+      |> halt()
+    end
+  end
+
+  @doc """
   Used for routes that require the user to be authenticated.
 
   If you want to enforce the user email is confirmed before

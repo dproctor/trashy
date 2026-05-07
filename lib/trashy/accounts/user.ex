@@ -11,6 +11,7 @@ defmodule Trashy.Accounts.User do
     field :last_name, :string
     field :is_organizer, :boolean
     field :is_admin, :boolean
+    field :is_merchant, :boolean
 
     many_to_many :cleanups, Trashy.Cleanups.Cleanup,
       join_through: Trashy.Cleanups.CleanupOrganizer,
@@ -171,6 +172,6 @@ defmodule Trashy.Accounts.User do
   """
   def admin_properties_changeset(user, attrs) do
     user
-    |> cast(attrs, [:is_organizer, :is_admin])
+    |> cast(attrs, [:is_organizer, :is_admin, :is_merchant])
   end
 end

@@ -1,0 +1,68 @@
+<.header>
+  <%= "#{@cleanup.neighborhood} (#{@cleanup.location})" %>
+</.header>
+
+<.list>
+  <:item title="Time"><%= Calendar.strftime(@event.time, "%m/%d/%Y %I:%M %p") %></:item>
+  <:item title="Participant count"><%= length(@event_participants) %></:item>
+</.list>
+
+<.table
+  id="event_participants"
+  rows={@event_participants}
+>
+  <:col :let={participant} label="First Name"><%= participant.first_name %></:col>
+  <:col :let={participant} label="Last Name"><%= participant.last_name %></:col>
+  <:col :let={participant} label="Promos">
+    <%= Enum.join(
+      for epp <- @participant_epps_claimed[participant.id] do
+        epp.promotion.icon
+      end
+    ) %>
+  </:col>
+  <:col :let={participant} label="Order">
+    <%= Enum.join(
+      for epp <- @participant_epps_claimed[participant.id] do
+        "#{epp.choice || ""} #{epp.notes || ""}"
+      end, "\n"
+    ) %>
+  </:col>
+</.table>
+
+<.header class="mt-10">
+  Promotion Choices
+</.header>
+
+<.table
+  id="promotions"
+  rows={
+    for(
+      {promotion, choice_claims} <- @promotion_choice_claims,
+      {{choice, notes}, claims} <- choice_claims
+    ) do
+      %{
+        promotion: promotion,
+        choice: choice,
+        notes: notes,
+        claims: claims
+      }
+    end
+  }
+>
+  <:col :let={r} label="Promotion">
+    <p><%= r.promotion.icon <> " " <> r.promotion.merchant %></p>
+    <p><%= r.promotion.details %></p>
+  </:col>
+  <:col :let={r} label="Choice">
+    <%= r.choice %>
+  </:col>
+  <:col :let={r} label="Notes">
+    <%= r.notes %>
+  </:col>
+  <:col :let={r} label="Claims">
+    <%= r.claims.count %>
+  </:col>
+  <:col :let={r} label="Names">
+   <%= r.claims.names %>
+  </:col>
+</.table>
