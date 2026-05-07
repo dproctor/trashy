@@ -25,7 +25,7 @@
 </.header>
 
 <.table id="events" rows={@events} row_click={&JS.navigate(~p"/organizer/events/#{&1}")}>
-  <:col :let={event} label="Time"><%= event.time %></:col>
+  <:col :let={event} label="Time"><%= Calendar.strftime(event.time, "%m/%d/%Y %I:%M %p") %></:col>
   <:action :let={event}>
     <div class="sr-only">
       <.link navigate={~p"/organizer/events/#{event}"}>Show</.link>
