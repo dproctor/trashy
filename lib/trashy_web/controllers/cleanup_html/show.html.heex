@@ -11,7 +11,7 @@
   <:item title="Neighborhood"><%= @cleanup.neighborhood %></:item>
   <:item title="Database ID"><%= @cleanup.id %></:item>
   <:item title="Location"><%= @cleanup.location %></:item>
-  <:item title="Regular datetime"><%= @cleanup.regular_datetime %></:item>
+  <:item title="Regular datetime"><%= if dt = @cleanup.regular_datetime, do: Calendar.strftime(dt, "%A %-I %p") %></:item>
   <:item title="Enable recurring events"><%= @cleanup.enable_recurring_events %></:item>
 </.list>
 
