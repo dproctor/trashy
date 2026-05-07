@@ -227,7 +227,7 @@ defmodule TrashyWeb.UserAuth do
   Used for routes that require the user to be a merchant.
   """
   def require_merchant(conn, _opts) do
-    if conn.assigns[:current_user].is_merchant do
+    if conn.assigns[:current_user].is_organizer or conn.assigns[:current_user].is_merchant do
       conn
     else
       conn
