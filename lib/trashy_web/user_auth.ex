@@ -195,16 +195,25 @@ defmodule TrashyWeb.UserAuth do
 
   @doc """
   Used for routes that require the user to be an organizer.
+
+  Redirects to merchant page if the user is not an organizer but is a merchant.
   """
   def require_organizer(conn, _opts) do
-    if conn.assigns[:current_user].is_organizer do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You do not have permission to view this page.")
-      |> maybe_store_return_to()
-      |> redirect(to: ~p"/not_authorized")
-      |> halt()
+    cond do
+      conn.assigns[:current_user].is_organizer ->
+        conn
+
+      conn.assigns[:current_user].is_merchant ->
+        conn
+        |> redirect(to: ~p"/merchant")
+        |> halt()
+
+      true ->
+        conn
+        |> put_flash(:error, "You do not have permission to view this page.")
+        |> maybe_store_return_to()
+        |> redirect(to: ~p"/not_authorized")
+        |> halt()
     end
   end
 
