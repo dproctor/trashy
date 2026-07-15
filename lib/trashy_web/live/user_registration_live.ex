@@ -61,6 +61,8 @@ defmodule TrashyWeb.UserRegistrationLive do
             user,
             &url(~p"/users/confirm/#{&1}")
           )
+        {:ok, _} =
+          Accounts.UserNotifier.deliver_new_account_creation_admin_notirication(user)
 
         changeset = Accounts.change_user_registration(user)
         {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset)}

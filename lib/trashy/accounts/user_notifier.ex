@@ -18,6 +18,22 @@ defmodule Trashy.Accounts.UserNotifier do
   end
 
   @doc """
+  Deliver admin notification of user creation.
+  """
+  def deliver_new_account_creation_admin_notirication(user) do
+    deliver("devon.proctor@gmail.com", "New user #{user.email} created", """
+
+    ==============================
+
+    Hi admin,
+
+    #{user.email} was just created. You can confirm the account and assign the organizer to a cleanup at https://cleanupthecity.org/admin/users/#{user.id}/edit.
+
+    ==============================
+    """)
+  end
+
+  @doc """
   Deliver instructions to confirm account.
   """
   def deliver_confirmation_instructions(user, url) do
