@@ -8,8 +8,6 @@ defmodule Trashy.Repo.Migrations.AddCompletionToEventParticipantPromotion do
       add :completed_at, :utc_datetime
     end
 
-    create index(:event_participant_promotions, [:event_participant_id])
-
     execute """
     UPDATE event_participant_promotions
     SET claimed_at = updated_at
@@ -23,7 +21,5 @@ defmodule Trashy.Repo.Migrations.AddCompletionToEventParticipantPromotion do
       remove :completed
       remove :completed_at
     end
-
-    drop index(:event_participant_promotions, [:event_participant_id])
   end
 end
