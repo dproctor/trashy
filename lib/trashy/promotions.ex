@@ -319,6 +319,7 @@ defmodule Trashy.Promotions do
       join: ep in assoc(epp, :event_participant),
       where: ep.event_id == ^event_id,
       where: epp.is_claimed == true,
+      where: not is_nil(epp.choice) or not is_nil(epp.notes),
       order_by: [asc: epp.claimed_at, asc: epp.id],
       preload: [:promotion, event_participant: ep]
     )
