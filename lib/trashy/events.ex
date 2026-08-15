@@ -9,6 +9,10 @@ defmodule Trashy.Events do
   alias Trashy.Events.Event
   alias Trashy.Events.EventParticipant
   alias Trashy.Cleanups.Cleanup
+  alias Trashy.Events.EventParticipantPromo, as: EPP
+
+  @pubsub Trashy.PubSub
+
 
   @doc """
   Returns the list of events.
@@ -337,5 +341,12 @@ defmodule Trashy.Events do
   """
   def change_event_participant(%EventParticipant{} = event_participant, attrs \\ %{}) do
     EventParticipant.changeset(event_participant, attrs)
+  end
+  def count_participants(event_id) do
+    from(ep in Trashy.Events.EventParticipant,
+      where: ep.event_id == ^event_id,
+      select: count()
+    )
+    |> Repo.one()
   end
 end

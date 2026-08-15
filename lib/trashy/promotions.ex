@@ -7,7 +7,9 @@ defmodule Trashy.Promotions do
   alias Trashy.Repo
 
   alias Trashy.Promotions.Promotion
-  alias Trashy.Promotions.EventParticipantPromotion
+  alias Trashy.Promotions.EventParticipantPromotion, as: EPP
+
+  @pubsub Trashy.PubSub
 
   @doc """
   Returns the list of promotions.
@@ -302,4 +304,61 @@ defmodule Trashy.Promotions do
       ) do
     EventParticipantPromotion.changeset(event_participant_promotion, attrs)
   end
+
+  def subscribe_to_orders(event_id),
+    do: Phoenix.PubSub.subscribe(@pubsub, orders_topic(event_id))
+
+  defp orders_topic(event_id), do: "event_orders:#{event_id}"
+
+  @doc """
+  Claimed promotions for an event — i.e. actual orders. A participant
+  signing in creates EPPs, but they aren't orders until redeemed.
+  """
+  def list_orders(event_id) do
+    from(epp in EPP,
+      join: ep in assoc(epp, :event_participant),
+      where: ep.event_id == ^event_id,
+      where: epp.is_claimed == true,
+      order_by: [asc: epp.claimed_at, asc: epp.id],
+      preload: [:promotion, event_participant: ep]
+    )
+    |> Repo.all()
+  end
+
+  @doc "Participant-facing redemption. Broadcasts to the merchant view."
+  def claim_event_participant_promotion(%EPP{} = epp, attrs) do
+    attrs =
+      attrs
+      |> Map.take(["choice", "notes"])
+      |> Map.merge(%{
+        "is_claimed" => true,
+        "claimed_at" => DateTime.utc_now() |> DateTime.truncate(:second)
+      })
+
+    epp
+    |> update_event_participant_promotion(attrs)
+    |> broadcast(:order_created)
+  end
+
+  @doc "Merchant-facing completion toggle. Broadcasts to the merchant view."
+  def set_order_completed(%EPP{} = epp, completed) do
+    epp
+    |> EPP.completion_changeset(completed)
+    |> Repo.update()
+    |> broadcast(:order_updated)
+  end
+
+  defp broadcast({:ok, epp}, event) do
+    epp = Repo.preload(epp, [:promotion, :event_participant], force: true)
+
+    Phoenix.PubSub.broadcast(
+      @pubsub,
+      orders_topic(epp.event_participant.event_id),
+      {event, epp}
+    )
+
+    {:ok, epp}
+  end
+
+  defp broadcast({:error, _} = error, _event), do: error
 end

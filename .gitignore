@@ -38,3 +38,5 @@ npm-debug.log
 .erlang-history/
 .nix-hex/
 .nix-mix/
+
+/.direnv/

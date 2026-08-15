@@ -66,7 +66,10 @@ defmodule TrashyWeb.Router do
   scope "/merchant", TrashyWeb do
     pipe_through([:browser, :require_authenticated_user, :require_merchant])
 
-    get("/", PageController, :merchant)
+    live_session :merchant,
+      on_mount: [{TrashyWeb.UserAuth, :ensure_authenticated}] do
+      live "/", MerchantLive
+    end
   end
 
   # Other scopes may use custom stacks.

@@ -182,28 +182,23 @@ defmodule TrashyWeb.CertificateLive do
         |> put_flash(:error, "This reward has already been redeemed.")
       }
     else
-      {:ok, _} =
-        Trashy.Promotions.update_event_participant_promotion(
-          epp,
-          Map.merge(
-            # Filter only to allowed keys.
-            Map.take(epp_chg, ["choice", "notes"]),
-            # Always mark as claimed.
-            %{"is_claimed" => true}
-          )
-        )
+          case Trashy.Promotions.claim_event_participant_promotion(epp, epp_chg) do
+            {:ok, _claimed} ->
+              epps = Trashy.Promotions.list_event_participant_promotions(participant_id)
 
-      epps = Trashy.Promotions.list_event_participant_promotions(participant_id)
+              {
+                :noreply,
+                socket
+                |> assign(epps: epps)
+                |> push_event("js:modal:#claim_reward_modal_#{epp.id}", %{open: false})
+              }
 
-      {
-        :noreply,
-        socket
-        |> assign(epps: epps)
-        |> push_event("js:modal:#claim_reward_modal_#{epp.id}", %{
-          # Close the modal.
-          open: false
-        })
-      }
+            {:error, _changeset} ->
+              {
+                :noreply,
+                put_flash(socket, :error, "Something went wrong redeeming that reward.")
+              }
+          end
     end
   end
 end
