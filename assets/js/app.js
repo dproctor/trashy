@@ -18,12 +18,25 @@
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import {Socket} from "phoenix"
-import {LiveSocket} from "phoenix_live_view"
+import { Socket } from "phoenix"
+import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import confetti from "canvas-confetti"
 
 let Hooks = {};
+
+Hooks.LocalTime = {
+  mounted() { this.render() },
+  updated() { this.render() },
+  render() {
+    const dt = new Date(this.el.dataset.utc)
+    this.el.textContent = dt.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit"
+    })
+  }
+}
+
 
 Hooks.DisplayConfetti = {
   mounted() {
@@ -56,17 +69,17 @@ Hooks.ModalCheckboxHandlers = {
     this.handleEvent(
       "js:modal:#" + checkbox.id,
       function onModal(payload) {
-          checkbox.checked = payload.open;
+        checkbox.checked = payload.open;
       },
     );
   }
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } })
 
 // Show progress bar on live navigation and form submits
-topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
+topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 

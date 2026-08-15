@@ -161,7 +161,14 @@
     </details>
 
     <p class="mt-10 text-center text-xs text-stone-300">
-      Updating live · last checked <%= Calendar.strftime(@now, "%-I:%M %p") %>
+      Updating live · last checked 
+      <span
+        id="last-checked"
+        phx-hook="LocalTime"
+        data-utc={DateTime.to_iso8601(@now)}
+      >
+        <%= Calendar.strftime(@now, "%-I:%M %p") %> UTC
+      </span>
     </p>
   </div>
 </div>
