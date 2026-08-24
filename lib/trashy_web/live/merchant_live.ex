@@ -14,7 +14,7 @@ defmodule TrashyWeb.MerchantLive do
       socket
       |> assign(:now, DateTime.utc_now())
       |> assign(event: nil, cleanup: nil, orders: %{})
-      |> assign(pending_count: 0, done_count: 0, participant_count: 0, tally: [])
+      |> assign(pending_count: 0, done_count: 0, participant_count: 0, rows: [])
       |> load_current_event()
 
     {:ok, socket}
@@ -22,9 +22,8 @@ defmodule TrashyWeb.MerchantLive do
 
   # ── Event resolution ────────────────────────────────────────────────
 
-  # Already resolved — cheap no-op on every subsequent tick. This guard is
-  # load-bearing on LiveView 0.18: stream/3 can only be called once per
-  # stream name per socket (no reset: option until 0.19).
+  # Already resolved — cheap no-op on every subsequent tick. Still load-bearing:
+  # without it the tick would re-subscribe to the same topic over and over.
   defp load_current_event(%{assigns: %{event: %{}}} = socket), do: socket
   defp load_current_event(%{assigns: %{current_user: nil}} = socket), do: socket
 
@@ -34,7 +33,6 @@ defmodule TrashyWeb.MerchantLive do
       if connected?(socket), do: Promotions.subscribe_to_orders(event.id)
 
       orders = Promotions.list_orders(event.id)
-      {pending, done} = Enum.split_with(orders, &(!&1.completed))
 
       socket
       |> assign(:event, event)
@@ -42,8 +40,6 @@ defmodule TrashyWeb.MerchantLive do
       |> assign(:participant_count, Events.count_participants(event.id))
       |> assign(:orders, Map.new(orders, &{&1.id, &1}))
       |> assign_summary()
-      |> stream(:pending, pending)
-      |> stream(:done, Enum.reverse(done))
     else
       _ -> socket
     end
@@ -66,7 +62,6 @@ defmodule TrashyWeb.MerchantLive do
     {:noreply,
      socket
      |> update(:orders, &Map.put(&1, order.id, order))
-     |> place(order)
      |> assign_summary()}
   end
 
@@ -77,46 +72,30 @@ defmodule TrashyWeb.MerchantLive do
      |> load_current_event()}
   end
 
-  # Move a row into the correct stream. stream_delete on an absent item is a
-  # no-op, so this handles both brand-new orders and completion toggles.
-  defp place(socket, %{completed: true} = order) do
-    socket
-    |> stream_delete(:pending, order)
-    |> stream_insert(:done, order, at: 0)
-  end
-
-  defp place(socket, order) do
-    socket
-    |> stream_delete(:done, order)
-    |> stream_insert(:pending, order)
-  end
-
   # ── Derived state ───────────────────────────────────────────────────
 
+  # One flat list, sorted by id, so a row never moves. Completing an order only
+  # changes how it is styled — hence no streams: the whole table is a plain
+  # comprehension over @rows. Fine at one-cleanup scale (tens of orders).
   defp assign_summary(socket) do
-    {pending, done} =
+    rows =
       socket.assigns.orders
       |> Map.values()
-      |> Enum.split_with(&(!&1.completed))
+      |> Enum.sort_by(& &1.id)
+
+    {pending, done} = Enum.split_with(rows, &(!&1.completed))
 
     socket
+    |> assign(:rows, rows)
     |> assign(:pending_count, length(pending))
     |> assign(:done_count, length(done))
-    |> assign(:tally, tally(pending))
-  end
-
-  defp tally(pending) do
-    pending
-    |> Enum.group_by(&{&1.promotion.icon, order_label(&1)})
-    |> Enum.map(fn {{icon, label}, list} ->
-      %{icon: icon, label: label, count: length(list)}
-    end)
-    |> Enum.sort_by(& &1.count, :desc)
   end
 
   # Promotions without a choice list are redeemed with choice == nil.
   defp order_label(%{choice: c}) when c not in [nil, ""], do: c
   defp order_label(%{promotion: promotion}), do: promotion.details
+
+  defp participant_name(%{event_participant: p}), do: "#{p.first_name} #{p.last_name}"
 
   # ── Time helpers ────────────────────────────────────────────────────
 
@@ -131,7 +110,14 @@ defmodule TrashyWeb.MerchantLive do
     end
   end
 
-  defp urgency(mins) when mins >= 15, do: "text-rose-600"
-  defp urgency(mins) when mins >= 8, do: "text-amber-600"
-  defp urgency(_), do: "text-stone-400"
+  # Completed rows never look urgent — the wait is over, it's just a record.
+  defp urgency(%{completed: true}, _now), do: "text-stone-300"
+
+  defp urgency(order, now) do
+    case minutes_waiting(order.claimed_at, now) do
+      m when m >= 15 -> "text-rose-600"
+      m when m >= 8 -> "text-amber-600"
+      _ -> "text-stone-400"
+    end
+  end
 end
