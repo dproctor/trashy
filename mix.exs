@@ -19,7 +19,7 @@ defmodule Trashy.MixProject do
   def application do
     [
       mod: {Trashy.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :pdf_generator]
     ]
   end
 
@@ -41,7 +41,7 @@ defmodule Trashy.MixProject do
       {:gen_smtp, "~> 1.1.1"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
-      {:pdf_generator, ">=0.6.0"},
+      {:pdf_generator, github: "gutschilla/elixir-pdf-generator"},
       {:phoenix, "~> 1.7.1"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.3"},
