@@ -61,6 +61,7 @@ defmodule TrashyWeb.Router do
     get("/", PageController, :admin)
     resources "/users", UserController
     get "/new_cleanup", CleanupController, :new
+    get("/merchant_debug/:cleanup_id", DebugController, :merchant)
   end
 
   scope "/merchant", TrashyWeb do

@@ -1,0 +1,160 @@
+<div class="mx-auto max-w-5xl px-4 py-8 text-sm sm:px-6">
+  <h1 class="text-xl font-semibold text-stone-900">
+    Merchant view of <%= @cleanup.neighborhood %>
+  </h1>
+  <p class="mt-1 text-stone-500">
+    Cleanup #<%= @cleanup.id %>. All times UTC.
+  </p>
+
+  <%!-- ───────────── Event picker ───────────── --%>
+
+  <section class="mt-6">
+    <h2 class="font-semibold text-stone-800">Events</h2>
+    <p :if={@events == []} class="mt-1 text-stone-500">This cleanup has no events yet.</p>
+    <ul class="mt-2 flex flex-wrap gap-2">
+      <li :for={e <- @events}>
+        <.link
+          href={~p"/admin/merchant_debug/#{@cleanup}?#{[event_id: e.id, at: datetime_local(@at)]}"}
+          class={[
+            "inline-block rounded border px-2.5 py-1 tabular-nums",
+            if(@event && e.id == @event.id,
+              do: "border-stone-800 bg-stone-800 text-white",
+              else: "border-stone-300 text-stone-700 hover:bg-stone-100"
+            )
+          ]}
+        >
+          #<%= e.id %>, <%= ts(e.time) %>
+          <span :if={@resolved && e.id == @resolved.id} title="The merchant page resolves this event at the replay time">
+            (live)
+          </span>
+        </.link>
+      </li>
+    </ul>
+  </section>
+
+  <%!-- ───────────── Replay time ───────────── --%>
+
+  <form method="get" action={~p"/admin/merchant_debug/#{@cleanup}"} class="mt-5 flex flex-wrap items-end gap-3">
+    <input :if={@event} type="hidden" name="event_id" value={@event.id} />
+    <label class="flex flex-col gap-1 text-stone-600">
+      Check which event the merchant page shows at
+      <input
+        type="datetime-local"
+        name="at"
+        value={datetime_local(@at)}
+        class="rounded border border-stone-300 px-2 py-1 text-sm"
+      />
+    </label>
+    <button class="rounded bg-stone-800 px-3 py-1.5 text-white hover:bg-stone-700">
+      Check
+    </button>
+    <p class="text-stone-500">
+      <%= if @resolved do %>
+        Resolves to event #<%= @resolved.id %>.
+      <% else %>
+        No event resolves; the merchant sees “No cleanup scheduled”.
+      <% end %>
+    </p>
+  </form>
+
+  <%!-- ───────────── Anomalies ───────────── --%>
+
+  <section :if={@anomalies != []} class="mt-6 rounded border border-rose-200 bg-rose-50 px-4 py-3">
+    <h2 class="font-semibold text-rose-800">Worth a look</h2>
+    <ul class="mt-1 list-disc pl-5 text-rose-900">
+      <li :for={a <- @anomalies}><%= a %></li>
+    </ul>
+  </section>
+
+  <%!-- ───────────── Timeline ───────────── --%>
+
+  <section :if={@event} class="mt-8">
+    <div class="flex flex-wrap items-baseline justify-between gap-2">
+      <h2 class="font-semibold text-stone-800">
+        Timeline for event #<%= @event.id %>
+      </h2>
+      <p class="text-stone-500">
+        <%= length(@orders) %> orders, <%= @participant_count %> volunteers
+      </p>
+    </div>
+    <p class="mt-1 text-stone-500">
+      Open and done are the header counts the merchant saw after each step.
+      Colour changes reached the screen on the next 30-second tick.
+    </p>
+
+    <div class="mt-3 overflow-x-auto">
+      <table class="w-full border-collapse">
+        <thead>
+          <tr class="border-b border-stone-300 text-left text-stone-500">
+            <th class="py-1.5 pr-3 font-medium">Time</th>
+            <th class="py-1.5 pr-3 text-right font-medium">From start</th>
+            <th class="py-1.5 pr-3 font-medium">What happened</th>
+            <th class="py-1.5 pr-3 font-medium">Order</th>
+            <th class="py-1.5 pr-3 font-medium">Volunteer</th>
+            <th class="py-1.5 pr-3 text-right font-medium">Open</th>
+            <th class="py-1.5 text-right font-medium">Done</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-stone-100">
+          <tr :for={entry <- @timeline} class="align-top">
+            <td class="whitespace-nowrap py-1 pr-3 tabular-nums text-stone-500">
+              <%= ts(entry.at) %>
+            </td>
+            <td class="whitespace-nowrap py-1 pr-3 text-right tabular-nums text-stone-500">
+              <%= offset(entry.offset) %>
+            </td>
+            <td class={["whitespace-nowrap py-1 pr-3", kind_class(entry.kind)]}>
+              <%= describe(entry.kind) %>
+              <span :if={entry.approx} class="text-stone-400" title="Taken from updated_at; there is no completed_at column">
+                (approx.)
+              </span>
+            </td>
+            <td class="py-1 pr-3">
+              <%= if entry.order do %>
+                <span class="text-stone-400">#<%= entry.order.id %></span>
+                <%= entry.order.promotion.icon %> <%= order_label(entry.order) %>
+              <% end %>
+            </td>
+            <td class="py-1 pr-3 text-stone-600">
+              <%= if entry.order, do: participant_name(entry.order) %>
+            </td>
+            <td class="py-1 pr-3 text-right tabular-nums"><%= entry.open %></td>
+            <td class="py-1 text-right tabular-nums"><%= entry.done %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <%!-- ───────────── Raw rows ───────────── --%>
+
+  <details :if={@orders != []} class="mt-8">
+    <summary class="cursor-pointer font-semibold text-stone-800">Raw order rows</summary>
+    <div class="mt-3 overflow-x-auto">
+      <table class="w-full border-collapse text-xs">
+        <thead>
+          <tr class="border-b border-stone-300 text-left text-stone-500">
+            <th class="py-1 pr-3 font-medium">ID</th>
+            <th class="py-1 pr-3 font-medium">Choice</th>
+            <th class="py-1 pr-3 font-medium">Notes</th>
+            <th class="py-1 pr-3 font-medium">Completed</th>
+            <th class="py-1 pr-3 font-medium">inserted_at</th>
+            <th class="py-1 pr-3 font-medium">claimed_at</th>
+            <th class="py-1 font-medium">updated_at</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-stone-100 tabular-nums">
+          <tr :for={o <- @orders}>
+            <td class="py-1 pr-3"><%= o.id %></td>
+            <td class="py-1 pr-3"><%= inspect(o.choice) %></td>
+            <td class="py-1 pr-3"><%= o.notes %></td>
+            <td class="py-1 pr-3"><%= o.completed %></td>
+            <td class="whitespace-nowrap py-1 pr-3"><%= ts(o.inserted_at) %></td>
+            <td class="whitespace-nowrap py-1 pr-3"><%= ts(o.claimed_at) %></td>
+            <td class="whitespace-nowrap py-1"><%= ts(o.updated_at) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</div>
