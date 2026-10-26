@@ -18,7 +18,7 @@
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import { Socket } from "phoenix"
+import { Socket, LongPoll } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import confetti from "canvas-confetti"
@@ -76,7 +76,29 @@ Hooks.ModalCheckboxHandlers = {
 }
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } })
+
+const useLongPoll = window.sessionStorage.getItem("phx_longpoll") === "true"
+
+let liveSocket = new LiveSocket("/live", Socket, {
+  transport: useLongPoll ? LongPoll : WebSocket,
+  hooks: Hooks,
+  params: { _csrf_token: csrfToken }
+})
+
+if (!useLongPoll) {
+  let wsConnected = false
+  liveSocket.getSocket().onOpen(() => { wsConnected = true })
+
+  setTimeout(() => {
+    if (!wsConnected) {
+      console.warn("WebSocket failed to connect in 2500ms, falling back to LongPoll...")
+      window.sessionStorage.setItem("phx_longpoll", "true")
+      liveSocket.disconnect()
+      liveSocket.getSocket().transport = LongPoll
+      liveSocket.connect()
+    }
+  }, 2500)
+}
 
 // Show progress bar on live navigation and form submits
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
